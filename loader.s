@@ -14,7 +14,7 @@
 .global loader
 
 loader:
-    mov $kernel_stack, %esp
+    mov $kernel_stack, %esp # initializing stack
     call callConstructors
     push %eax
     push %ebx
