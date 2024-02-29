@@ -1,6 +1,7 @@
 #ifndef __GDT.H
 #define __GDT.H
 #include "types.h"
+// defining the gdt class, as well as a segment class inside
 
     class GlobalDescriptorTable
     {
@@ -21,15 +22,18 @@
                 uint32_t Limit();
             } __attribute__((packed));
 
+        // initializing some segments - convention
         SegmentDescriptor nullSegmentSelector;
         SegmentDescriptor unusedSegmentSelector;
+        // initially one code segment and one data segment for the kernel space
         SegmentDescriptor codeSegmentSelector;
         SegmentDescriptor dataSegmentSelector;
 
     public:
+        // constructor and destructor
         GlobalDescriptorTable();
         ~GlobalDescriptorTable();
-
+        // descriptors of segments
         uint16_t CodeSegmentSelector();
         uint16_t DataSegmentSelector();
 

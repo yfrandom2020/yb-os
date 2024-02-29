@@ -6,7 +6,7 @@ void printf(char* str)
         VideoMemory[i] = (VideoMemory[i]&0xFF00) | str[i];
 
 }
-//a
+
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
 extern "C" constructor end_ctors;

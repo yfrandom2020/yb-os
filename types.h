@@ -1,3 +1,6 @@
+// types definitions
+// for example: int8_t - signed 8 bit integer
+// uint8_t - unsigned 8 bit integer
 #ifndef __TYPES_H
 #define __TYPES_H
 
