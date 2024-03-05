@@ -37,8 +37,6 @@
         uint16_t CodeSegmentSelector();
         uint16_t DataSegmentSelector();
 
-
-
     };
 
 #endif
