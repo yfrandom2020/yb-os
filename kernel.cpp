@@ -1,4 +1,5 @@
 #include "types.h"
+#include "gdt.h"
 void printf(char* str)
 {
     // char* str is a pointer to the address of the "Hello world!", so it contains something like 0x00a679
@@ -24,7 +25,7 @@ extern "C" void callConstructors()
 extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     printf("Hello World!"); // this is a string literal, stored somewhere in a non modifiable segment
-
+    GlobalDescriptorTable gdt;
     while(1);
 }
 

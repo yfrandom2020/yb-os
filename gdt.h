@@ -21,7 +21,7 @@
                 SegmentDescriptor(uint32_t base, uint32_t limit, uint8_t type); // constructor of entry
                 uint32_t Base(); // getters
                 uint32_t Limit();
-            } __attribute__((packed)); // don't change anything when compiling
+            } __attribute__((packed)); // don't change anything when compiling - as in moving bytes
 
         // initializing segments
         SegmentDescriptor nullSegmentSelector;
@@ -31,11 +31,11 @@
         SegmentDescriptor dataSegmentSelector;
 
     //public:
-        // constructor and destructor
+        // constructor and destructor of the gdt class
         GlobalDescriptorTable();
         ~GlobalDescriptorTable();
         // descriptors of segments
-        uint16_t CodeSegmentSelector();
+        uint16_t CodeSegmentSelector(); // will return the address - descriptor
         uint16_t DataSegmentSelector();
 
     };
