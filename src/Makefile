@@ -3,6 +3,7 @@ ASPARAMS = --32
 LDPARAMS = -melf_i386
 objects = loader.o gdt.o port.o kernel.o
 directory = "parts"
+try = "try"
 %.o: %.cpp
 	g++ $(GPPPARAMS) -o $@ -c $<
 	sudo mv $@ /home/fridkin/os/yb-os/parts
