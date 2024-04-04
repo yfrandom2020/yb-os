@@ -18,7 +18,7 @@ loader:
     call callConstructors
     push %eax
     push %ebx
-    call kernelMain
+    call kernelMain # transitioning to kernel action
 
 _stop:
     cli
