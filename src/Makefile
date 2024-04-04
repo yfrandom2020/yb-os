@@ -6,12 +6,12 @@ directory = "parts"
 %.o: %.cpp
 	g++ $(GPPPARAMS) -o $@ -c $<
 	sudo mv $@ /home/fridkin/os/yb-os/parts
-$(directory)/%.o: %.s
+%.o: %.s
 	as $(ASPARAMS) -o $@ $<
-	/home/fridkin/os/yb-os/parts
-$(directory)/mykernel.bin: linker.ld $(objects)
+	sudo mv $@ /home/fridkin/os/yb-os/parts
+mykernel.bin: linker.ld $(objects)
 	ld $(LDPARAMS) -T $< -o $@ $(objects)
-	/home/fridkin/os/yb-os/parts
+	sudo mv $@ /home/fridkin/os/yb-os/parts
 install: mykernel.bin
 	sudo cp $< /boot/mykernel.bin
 mykernel.iso: mykernel.bin
