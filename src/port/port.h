@@ -1,31 +1,32 @@
 #ifndef __PORT_H
 #define __PORT_H
-#include "types.h"
+#include "../types.h"
 
     class Port // basic port class
     {
     protected:
         uint16_t portnumber;
-        Port(uint16_t portnumber); // constructor
-        ~Port();
+        Port(uint16_t portnumber); // constructor - specify the port address as an attribute of the class
+        ~Port(); // destructor - not really necessary
     };
 
     class Port8Bit : public Port // a child class that specifies a 8 bit port
     {
     public:
-        Port8Bit(uint16_t portnumber);
+        Port8Bit(uint16_t portnumber); // constructor destructor
         ~Port8Bit();
-        virtual void Write (uint8_t data);
+        virtual void Write (uint8_t data); // write to the port
+        // 8 bit port so the read and write are 8 bit
         virtual uint8_t Read();
 
     };
 
-    class Port8BitSlow : public Port8Bit // a child class that specifies a 8 bit port
+    class Port8BitSlow : public Port8Bit // a child class that specifies a type 8 bit port
     {
     public:
         Port8BitSlow(uint16_t portnumber);
         ~Port8BitSlow();
-        virtual void Write (uint8_t data);
+        virtual void Write (uint8_t data); // only the write is different
 
     };
 

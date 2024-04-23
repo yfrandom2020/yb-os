@@ -47,7 +47,14 @@ Port8BitSlow::~Port8BitSlow()
 
 void Port8BitSlow::Write(uint8_t data)
 {
-    __asm__ volatile("outb %0, %1\njmp if\n1: jmp if\n1:" : : "a" (data), "Nd" (portnumber));
+        __asm__ volatile(
+        "outb %0, %1\n\t"
+        "jmp 1f\n\t"
+        "1:\n\t"
+        :
+        : "a" (data), "Nd" (portnumber)
+    );
+    //__asm__ volatile("outb %0, %1\njmp if\n1: jmp if\n1:" : : "a" (data), "Nd" (portnumber));
 }
 
 

@@ -1,6 +1,6 @@
-#ifndef __GDT.H
-#define __GDT.H
-#include "types.h"
+#ifndef __GDT_H
+#define __GDT_H
+#include "../types.h"
 // defining the gdt class, as well as a segment class inside
 
     class GlobalDescriptorTable // class that represents the gdt table
@@ -15,7 +15,7 @@
                 uint8_t base_hi;
                 uint8_t type;
                 uint8_t flags_limit_hi;
-                uint8_t base vhi;
+                uint8_t base_vhi;
 
             public:
                 SegmentDescriptor(uint32_t base, uint32_t limit, uint8_t type); // constructor of entry

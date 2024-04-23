@@ -1,5 +1,5 @@
 #include "types.h"
-#include "gdt.h"
+#include "gdt/gdt.h"
 void printf(char* str)
 {
     // char* str is a pointer to the address of the "Hello world!", so it contains something like 0x00a679
