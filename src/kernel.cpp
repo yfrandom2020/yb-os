@@ -16,7 +16,7 @@ void printf(char* str)
                 x = 0;
                 break;
             default:
-                VideoMemory[i] = (VideoMemory[i]&0xFF00) | str[i];
+                VideoMemory[80*y + i] = (VideoMemory[80*y + i]&0xFF00) | str[i];
                 x++;
                 break;
         }
@@ -30,7 +30,7 @@ void printf(char* str)
             // no more place on screen
             for (y = 0; y < 25; y++)
                 for (x = 0; x < 80; x++)
-                    VideoMemory[i] = (VideoMemory[i]&0xFF00) | ' ';
+                    VideoMemory[80*y + i] = (VideoMemory[80*y + i]&0xFF00) | ' ';
             x = 0;
             y = 0;
         }

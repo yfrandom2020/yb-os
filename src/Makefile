@@ -9,10 +9,12 @@ first_path = /home/fridkin/os/yb-os/src
 .PHONY: all
 all:
 	make clean
+	make gdt/gdt.o
+	make port/port.o
+	make loader.o
+	make kernel.o
 	make mykernel.bin
 	make mykernel.iso
-
-move:
 	sudo mv $(all_objects) $(path)
 
 %.o: %.cpp
@@ -52,6 +54,7 @@ mykernel.iso: mykernel.bin
 	echo '}' >> iso/boot/grub/grub.cfg
 	grub-mkrescue --output=$@ iso
 	rm -rf iso
+
 .PHONY: clean
 clean:
 	@cd $(path) && \
