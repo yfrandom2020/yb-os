@@ -1,38 +1,41 @@
-GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore
+GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fpermissive
 ASPARAMS = --32
 LDPARAMS = -melf_i386
-objects = loader.o gdt.o port.o kernel.o
+objects = gdt.o loader.o port.o kernel.o
 all_objects = $(objects) mykernel.iso mykernel.bin
 path = /home/fridkin/os/yb-os/parts
 first_path = /home/fridkin/os/yb-os/src
 
 .PHONY: all
 all:
-	@make clean
-	@make mykernel.bin
-	@make mykernel.iso
+	make clean
+	make mykernel.bin
+	make mykernel.iso
 
+move:
 	sudo mv $(all_objects) $(path)
-
-
-
 
 %.o: %.cpp
 	g++ $(GPPPARAMS) -o $@ -c $<
-	@sudo mv $@ $(first_path)
+	-@sudo mv $@ $(first_path)
 %.o: %.s
 	as $(ASPARAMS) -o $@ $<
-	@sudo mv $@ $(first_path)
+	-@sudo mv $@ $(first_path)
 
-gdt.o: @cd /gdt/
-port.o: @cd /port/
+gdt.o:
+	@cd gdt && \
+	make gdt.o && \
+	mv gdt.o $(first_path)
+port.o:
+	@cd port && \
+	make port.o && \
+	mv port.o $(first_path)
 kernel.o:
 loader.o:
 
 
 mykernel.bin: linker.ld $(objects)
-	cd $(path) && \
-	ld $(LDPARAMS) -T $(first_path)/$< -o $@ $(objects)
+	ld $(LDPARAMS) -T $< -o $@ $(objects)
 install: mykernel.bin
 	sudo cp $< /boot/mykernel.bin
 mykernel.iso: mykernel.bin
@@ -48,8 +51,8 @@ mykernel.iso: mykernel.bin
 	echo '  boot' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
 	grub-mkrescue --output=$@ iso
-	rm -rf iso && \
+	rm -rf iso
 .PHONY: clean
 clean:
 	@cd $(path) && \
-	@rm -f $(objects) mykernl.bin mykernel.iso
+	rm -f $(objects) mykernel.bin mykernel.iso

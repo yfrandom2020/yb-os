@@ -16,10 +16,11 @@ dataSegmentSelector(0,64*1024*1024, 0x92)
     //there is only a single object of the class GlobalDescriptorTable, we want to load this object into the gdtr - we need to load it's address and it's size
 
 
-    i[0] = (int32_t)this; // the address of the object the was just created
+    i[0] = (uint32_t)this; // the address of the object the was just created
+
     i[1] = sizeof(GlobalDescriptorTable) << 16; // the size of the class
 
-    asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // loading into the gdtr using inline assembly
+    asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // loading into the gdtr using inline assembly, pointer to the
 }
 
 GlobalDescriptorTable::~GlobalDescriptorTable()
