@@ -1,10 +1,8 @@
 #include "gdt.h"
 
-// writing the constructors for the gdt table
-// we need a constructor for a single entry in the table
-// also descriptors for a segment: size and offset in memory
+// implmenting the constructors for the gdt table
 
-GlobalDescriptorTable::GlobalDescriptorTable()
+GlobalDescriptorTable::GlobalDescriptorTable() // this is the constructor of an instance in the gdt class, each instance (we only need one) contains several segement selectors inside it
 : nullSegmentSelector(0,0,0),
 unusedSegmentSelector(0,0,0),
 codeSegmentSelector(0,64*1024*1024, 0x9A),
@@ -13,26 +11,26 @@ dataSegmentSelector(0,64*1024*1024, 0x92)
     uint32_t i[2]; // array with two elements, each sized 4 bytes total 8 bytes
     // it's loaded to the gdtr as address and size of gdt
 
-    //there is only a single object of the class GlobalDescriptorTable, we want to load this object into the gdtr - we need to load it's address and it's size
+    //there is only a single object of the class GlobalDescriptorTable, we want to load this object into the gdtr
 
 
     i[0] = (uint32_t)this; // the address of the object the was just created
 
     i[1] = sizeof(GlobalDescriptorTable) << 16; // the size of the class
 
-    asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // loading into the gdtr using inline assembly, pointer to the
+    asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // loading into the gdtr using inline assembly, pointer to the gdt object that was created
 }
 
 GlobalDescriptorTable::~GlobalDescriptorTable()
 {
-    // destructor
+    // destructor of the gdt object
     // doesn't actually gets used but defining for convention
 }
 
-uint16_t GlobalDescriptorTable::DataSegmentSelector() // return address of segment (relative)
+uint16_t GlobalDescriptorTable::DataSegmentSelector() // return address of data segment (relative)
 {
     return (uint8_t*)&dataSegmentSelector - (uint8_t*)this;
-    // for example if object begins in address 300 and data seg begins in 305 then the returned address will be 5, essentially this is the offset of each segment
+    // for example if object begins in address 300 and data seg begins in 305 then the returned address will be 5, essentially this is the offset of each segment selector from the beggining of the table
 }
 
 uint16_t GlobalDescriptorTable::CodeSegmentSelector()
@@ -44,8 +42,9 @@ uint16_t GlobalDescriptorTable::CodeSegmentSelector()
 
 GlobalDescriptorTable::SegmentDescriptor::SegmentDescriptor(uint32_t base, uint32_t limit, uint8_t flags)
 {
+    // parameters in: base - starting address (still in real mode) , limit - size in bytes, flags - the different permissions
     // this is the constructor of a single entry in the gdt table
-    // each entry describes a single segment
+    // each entry (called segement descriptor) describes a single segment
     // parameters: base - starting address, limit - size, flags - type of segment
     uint8_t* target = (uint8_t*) this;
 

@@ -1,5 +1,8 @@
 #include "types.h"
 #include "gdt/gdt.h"
+// This is the main kernel file
+// this file is the main code that gets exectuted upon booting the os
+// // the main function is kernelMain which will in turn call the other functions
 void printf(char* str)
 {
     // char* str is a pointer to the address of the "Hello world!", so it contains something like 0x00a679
@@ -11,7 +14,7 @@ void printf(char* str)
     {
         switch(str[i])
         {
-            case '\n':
+            case '\n': // new line
                 y++;
                 x = 0;
                 break;
@@ -30,12 +33,14 @@ void printf(char* str)
             // no more place on screen
             for (y = 0; y < 25; y++)
                 for (x = 0; x < 80; x++)
-                    VideoMemory[80*y + i] = (VideoMemory[80*y + i]&0xFF00) | ' ';
+                    VideoMemory[80*y + i] = (VideoMemory[80*y + i]&0xFF00) | ' '; // clear screen
             x = 0;
             y = 0;
         }
     }
 }
+
+// conventions
 
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
@@ -49,11 +54,16 @@ extern "C" void callConstructors()
 
 extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
+    // this is the kernelMain function - the main function of the kernel and the os
+    // this function is the first to run and is the one called from the loader.s file
+
     printf("Hello World! \n"); // this is a string literal, stored somewhere in a non modifiable segment
 
     // test pull
     printf("Hello World!");
-    GlobalDescriptorTable gdt;
+    GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
+
+
     while(1);
 }
 

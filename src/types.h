@@ -1,6 +1,7 @@
 // types definitions
 // for example: int8_t - signed 8 bit integer
 // uint8_t - unsigned 8 bit integer
+// this is a convention for projects, instead of using regular sizes
 #ifndef __TYPES_H
 #define __TYPES_H
 

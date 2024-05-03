@@ -1,6 +1,13 @@
 #ifndef __PORT_H
 #define __PORT_H
 #include "../types.h"
+// this is the port communication part
+// in order to receive data from I/O devices it's necessary to speak to the ports that connect them to the computer
+// in reality, the cpu is connected to a PIC (programmable interrupt chip) and this PIC is connected to the physical devices - 8 specifically
+// we will use this port class to communicate with the PIC, which sits at port 0x20
+// each object in this class represents a connnection with a single port, with the parameter being it's number
+// this class has function to read and write data to the port, depending on it's size
+
 
     class Port // basic port class
     {

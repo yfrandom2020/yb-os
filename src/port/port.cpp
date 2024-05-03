@@ -1,5 +1,8 @@
 #include "port.h"
 
+// implement the port.h functions
+// contructors + write + read
+// the functions are very similar to one another, with the sole exception being the size of the port communicated with
 Port::Port(uint16_t portnumber)
 {
     this->portnumber = portnumber;
@@ -23,6 +26,7 @@ Port8Bit::~Port8Bit()
 
 void Port8Bit::Write(uint8_t data)
 {
+    // using inline assembly to write and read from the specific port
     __asm__ volatile("outb %0, %1" : : "a" (data), "Nd" (portnumber));
 }
 
