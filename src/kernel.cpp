@@ -61,7 +61,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     // test pull
     printf("Hello World!");
-    GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
+    //GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
 
 
     while(1);
