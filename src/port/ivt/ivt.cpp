@@ -4,22 +4,27 @@
 // the table contains 256 entries with each entry being a far pointer sized 4 bytes
 // each pointer points to a different interrupt handler - a code somewhere else in the RAM that handles this specific interrupt
 
+
 // Define the Interrupt Vector Table (IVT) at a specific address
-void (*IVT[256])() __attribute__((section(".ivt"))); // tell the compiler that this will be saved in a special section named .ivt that will come at the beggining of the linked kernel file
+void (*IVT[256])() __attribute__((section(".ivt"))); // tell the compiler that this will be saved in a special section named .ivt that will come at the beggining of the linked kernel file - in address 0x0
+// creating an array with 256 objects, where each object is a pointer to a void function that takes and returns no arguments (the ISR)
+
 
 // Define Interrupt Service Routines (ISRs)
-extern "C" void ISR0() {
+extern "C" void ISR0()
+{
     // Handle interrupt 0
 }
 
-extern "C" void ISR1() {
+extern "C" void ISR1()
+{
     // Handle interrupt 1
 }
 
 // Initialize the IVT with ISR addresses
-extern "C" void initIVT() {
+extern "C" void initIVT()
+{
     IVT[0] = ISR0;
     IVT[1] = ISR1;
-    // Initialize other interrupt vectors as needed
 }
 
