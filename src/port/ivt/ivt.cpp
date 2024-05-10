@@ -3,7 +3,8 @@
 // The table is 1024 bytes long, stretching to 0x003FF
 // The table contains 256 entries with each entry being a far pointer sized 4 bytes
 // Each pointer points to a different interrupt handler - a code somewhere else in the RAM that handles this specific interrupt
-
+#include "../../types.h"
+extern void PIC_sendEOI(uint8_t irq); // The EOI function from the pic.cpp file
 
 // Define the Interrupt Vector Table (IVT) at a specific address
 void (*IVT[256])() __attribute__((section(".ivt"))); // Tell the compiler that this will be saved in a special section named .ivt that will come at the beggining of the linked kernel file - in address 0x0
@@ -148,6 +149,23 @@ extern "C" void isr30()
 extern "C" void isr31()
 {
     // Handle interrupt 31
+}
+
+extern "C" void isr32()
+{
+    // Handle interrupt 32 - This is the timer interrupt
+    // The 0x20 offset given to PIC 1 corresponds with this functions
+    // The previous functions were compiler related and this is the first manually written one
+
+}
+
+extern "C" void isr33()
+{
+    // Handle interrupt 33 - This is the keyboard interrupt
+    // Since the keyboard sits on IRQ 1 it means it's offset 1 from the 0x20 given to the PIC - 0x20 + 1 = 0x21 = 33
+    uint8_t key_data = inb(0x60);
+    asm volatile("sti"); // Re-enable the interrupt flag, just in case
+    pic_send_eoi(1); // Assuming keyboard is connected to IRQ 1
 }
 
 

@@ -21,7 +21,7 @@ extern "C" void init_pic()
 
     // Initialize PIC1
     outb(PIC1_COMMAND, ICW1_INIT | ICW4_8086);
-    outb(PIC1_DATA, 0x20); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's interrupt starts with the number 0x20 which is 32. This is because the first 31 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
+    outb(PIC1_DATA, 0x20); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's ivt offset starts with the number 0x20 which is 32. This is because the first 32 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
     outb(PIC1_DATA, 0x04); // Tell PIC1 that there is a slave PIC at IRQ2 (0000 0100)
     outb(PIC1_DATA, 0x01); // 8086 mode
 
