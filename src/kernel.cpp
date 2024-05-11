@@ -20,6 +20,7 @@ extern void initIVT();
 char command_buffer[KEYBOARD_BUFFER_SIZE]; // This buffer will contain the data from the keyboard - each time a data is inputted to the keyboard_buffer it will also be inputted into the command buffer. In case of line feed we will check the data stored in the command buffer
 char keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // initializing a keyboard buffer that will contain what is typed
 int keyboard_buffer_index = 0;
+char* commands[1] = {nullptr};
 
 
 void printf(char* str)
@@ -119,6 +120,10 @@ extern "C" void fill_keyboard_buffer(uint8_t letter)
     {
         index++;
     }
+    if (letter == '\n')
+    {
+        index = 0;
+    }
 }
 
 
@@ -138,6 +143,9 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
     printf("Hello World! \n");
+    char first_command[10] = "ben dover";
+    commands[0] = first_command[0];
+
     //GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
 
 
@@ -162,10 +170,9 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
         {
             // We got data so we begin by re - initializing the buffers
             initialize_buffers();
-
+            // Now we should figure out if the data is one of the available commands
 
         }
-
     }
 }
 

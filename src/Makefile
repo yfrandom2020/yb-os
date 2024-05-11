@@ -1,8 +1,8 @@
 GPPPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fpermissive
 ASPARAMS = --32
 LDPARAMS = -melf_i386
-objects = gdt.o loader.o port.o kernel.o pic.o ivt.o
-all_objects = $(objects) mykernel.iso mykernel.bin
+objects = loader.o kernel.o gdt.o port.o pic.o ivt.o
+all_objects = $(objects) mykernel.bin mykernel.iso
 path = /home/fridkin/os/yb-os/parts
 first_path = /home/fridkin/os/yb-os/src
 

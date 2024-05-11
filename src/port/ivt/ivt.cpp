@@ -20,7 +20,7 @@ extern void fill_keyboard_buffer(uint8_t letter);
 // Define the Interrupt Vector Table (IVT) at a specific address
 
 
-void (*IVT[256])() __attribute__((section(".ivt"))); // Tell the compiler that this will be saved in a special section named .ivt that will come at the beggining of the linked kernel file - in address 0x0
+void (*IVT[256])(); //__attribute__((section(".ivt"))); // Tell the compiler that this will be saved in a special section named .ivt that will come at the beggining of the linked kernel file - in address 0x0
 // Creating an array with 256 objects, where each object is a pointer to a void function that takes and returns no arguments (the ISR)
 
 

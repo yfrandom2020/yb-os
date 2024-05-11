@@ -4,13 +4,13 @@ OUTPUT_ARCH(i386:i386)
 
 SECTIONS
 {
-    . = 0x00000;
+    /*. = 0x000000;
 
     .ivt : /* Define a section for the IVT */
-    {
+    /*{*/
         /* Place the IVT here */
-        *(.ivt)
-    }
+        /**(.ivt)
+    }*/
 
 
     . = 0x100000;

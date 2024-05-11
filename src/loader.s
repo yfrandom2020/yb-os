@@ -16,7 +16,7 @@
 loader:
     mov $kernel_stack, %esp # initializing kernel stack
     call callConstructors # convention
-    push %eax
+    push %eax # these registers contain some information regarding the multiboot strucure
     push %ebx
     call kernelMain # transitioning to kernel c++ function
 
