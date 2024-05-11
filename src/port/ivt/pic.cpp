@@ -2,17 +2,10 @@
 #include "../../types.h"
 #include "pic.h"
 
+
 // This file will be the actual communication with the PIC - the programmable interrupt chip
 // The PIC is what connects the cpu to the hardware devices, for example the keyboard is connected with IRQ 1
 
-// extern "C" void pic_init()
-// {
-//     // the following function initializes the pic, will be called from the kernelMain funtion
-//
-//     Port8Bit pic((uint16_t)0x20); // establishing port connection with PIC
-//
-//     pic.Write((uint8_t)0x11); // initialize the PIC
-// }
 
 static inline uint8_t inb(uint8_t portnumber)
 {
@@ -21,17 +14,21 @@ static inline uint8_t inb(uint8_t portnumber)
      return result;
 }
 
+
 static inline void outb(uint16_t port, uint8_t data)
 {
      __asm__ volatile("outb %0, %1" : : "a" (data), "Nd" (port));
 }
 
+
 extern "C" void init_pic()
 {
+    // Send initializing commands to the two PICs
 
 
     uint16_t ICW1_INIT = 0x10; // ICW - initialization command word
     uint16_t ICW4_8086 = 0x01;
+
 
     // Initialize PIC1
     outb(PIC1_COMMAND, ICW1_INIT | ICW4_8086);
@@ -39,11 +36,13 @@ extern "C" void init_pic()
     outb(PIC1_DATA, 0x04); // Tell PIC1 that there is a slave PIC at IRQ2 (0000 0100)
     outb(PIC1_DATA, 0x01); // 8086 mode
 
+
     // Initialize PIC2
     outb(PIC2_COMMAND, ICW1_INIT | ICW4_8086);
     outb(PIC2_DATA, 0x28); // PIC2 base IRQ is 0x28
     outb(PIC2_DATA, 0x02); // Tell PIC2 its cascade identity (0000 0010)
     outb(PIC2_DATA, 0x01); // 8086 mode
+
 
     // Mask all interrupts
     outb(PIC1_DATA, 0xFF);
@@ -59,6 +58,7 @@ extern "C" void enable_interrupts()
     outb(PIC1_DATA, 0x00); // Unmask all interrupts on PIC1
     outb(PIC2_DATA, 0x00); // Unmask all interrupts on PIC2
 }
+
 
 extern "C" void PIC_sendEOI(uint8_t irq)
 {

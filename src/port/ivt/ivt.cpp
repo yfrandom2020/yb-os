@@ -10,12 +10,16 @@
 #include "pic.h"
 #include "../../kernel.h"
 
+
 extern void PIC_sendEOI(uint8_t irq); // The EOI function from the pic.cpp file
 extern void fill_keyboard_buffer(uint8_t letter);
+
 
 //extern uint8_t inb(uint8_t portnumber);
 //extern void outb(uint8_t port, uint8_t data);
 // Define the Interrupt Vector Table (IVT) at a specific address
+
+
 void (*IVT[256])() __attribute__((section(".ivt"))); // Tell the compiler that this will be saved in a special section named .ivt that will come at the beggining of the linked kernel file - in address 0x0
 // Creating an array with 256 objects, where each object is a pointer to a void function that takes and returns no arguments (the ISR)
 
@@ -26,45 +30,55 @@ extern "C" void isr0()
     // Handle interrupt 0
 }
 
+
 extern "C" void isr1()
 {
     // Handle interrupt 1
 }
+
 
 extern "C" void isr2()
 {
     // Handle interrupt 2
 }
 
+
 extern "C" void isr3()
 {
     // Handle interrupt 3
 }
+
 
 extern "C" void isr4()
 {
     // Handle interrupt 4
 }
 
+
 extern "C" void isr5()
 {
     // Handle interrupt 5
 }
+
 
 extern "C" void isr6()
 {
     // Handle interrupt 6
 }
 
+
 extern "C" void isr7()
 {
     // Handle interrupt 7
 }
 
+
 extern "C" void isr8()
 {
     // Handle interrupt 8
 }
+
+
 extern "C" void isr9()
 {
     // Handle interrupt 9
@@ -75,90 +89,133 @@ extern "C" void isr10()
 {
     // Handle interrupt 10
 }
+
+
 extern "C" void isr11()
 {
     // Handle interrupt 11
 }
+
+
 extern "C" void isr12()
 {
     // Handle interrupt 12
 }
+
+
 extern "C" void isr13()
 {
     // Handle interrupt 13
 }
+
+
 extern "C" void isr14()
 {
     // Handle interrupt 14
 }
+
+
 extern "C" void isr15()
 {
     // Handle interrupt 15
 }
+
+
 extern "C" void isr16()
 {
     // Handle interrupt 16
 }
+
+
 extern "C" void isr17()
 {
     // Handle interrupt 17
 }
+
+
 extern "C" void isr18()
 {
     // Handle interrupt 18
 }
+
+
 extern "C" void isr19()
 {
     // Handle interrupt 19
 }
+
+
 extern "C" void isr20()
 {
     // Handle interrupt 20
 }
+
+
 extern "C" void isr21()
 {
     // Handle interrupt 21
 }
+
+
 extern "C" void isr22()
 {
     // Handle interrupt 22
 }
+
+
 extern "C" void isr23()
 {
     // Handle interrupt 23
 }
+
+
 extern "C" void isr24()
 {
     // Handle interrupt 24
 }
+
+
 extern "C" void isr25()
 {
     // Handle interrupt 25
 }
+
+
 extern "C" void isr26()
 {
     // Handle interrupt 26
 }
+
+
 extern "C" void isr27()
 {
     // Handle interrupt 27
 }
+
+
 extern "C" void isr28()
 {
     // Handle interrupt 28
 }
+
+
 extern "C" void isr29()
 {
     // Handle interrupt 29
 }
+
+
 extern "C" void isr30()
 {
     // Handle interrupt 30
 }
+
+
 extern "C" void isr31()
 {
     // Handle interrupt 31
 }
+
 
 extern "C" void isr32()
 {
@@ -167,6 +224,7 @@ extern "C" void isr32()
     // The previous functions were compiler related and this is the first manually written one
 
 }
+
 
 extern "C" void isr33()
 {
@@ -217,6 +275,5 @@ extern "C" void initIVT()
     IVT[29] = isr29;
     IVT[30] = isr30;
     IVT[31] = isr31;
-
 }
 

@@ -22,7 +22,6 @@ all:
 
 	make port/ivt/ivt.o
 
-
 	make mykernel.bin
 
 	make mykernel.iso
@@ -33,26 +32,42 @@ all:
 %.o: %.cpp
 	g++ $(GPPPARAMS) -o $@ -c $<
 	-@sudo mv $@ $(first_path)
+
+
 %.o: %.s
 	as $(ASPARAMS) -o $@ $<
 	-@sudo mv $@ $(first_path)
+
 
 gdt.o:
 	@cd gdt && \
 	make gdt.o && \
 	mv gdt.o $(first_path)
+
+
 port.o:
 	@cd port && \
 	make port.o && \
 	mv port.o $(first_path)
+
+
 kernel.o:
+
+
 loader.o:
+
 
 
 mykernel.bin: linker.ld $(objects)
 	ld $(LDPARAMS) -T $< -o $@ $(objects)
+
+
+
 install: mykernel.bin
 	sudo cp $< /boot/mykernel.bin
+
+
+
 mykernel.iso: mykernel.bin
 	mkdir iso
 	mkdir iso/boot
@@ -67,6 +82,7 @@ mykernel.iso: mykernel.bin
 	echo '}' >> iso/boot/grub/grub.cfg
 	grub-mkrescue --output=$@ iso
 	rm -rf iso
+
 
 .PHONY: clean
 clean:
