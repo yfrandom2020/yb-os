@@ -46,6 +46,7 @@ extern "C" void fill_keyboard_buffer(uint8_t letter)
     else if (index <= 127)
     {
         keyboard_buffer[index] = letter;
+        printf(letter);
         index++;
     }
 }
@@ -135,13 +136,13 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     enable_interrupts();
 
     // Entering main kernel loop
-    uint8_t user_data = '\0'
+    uint8_t user_data = '\0';
     while(true)
     {
         user_data = check_buffer_status();
         if (user_data != '\0')
         {
-            printf(user_data)
+
 
         }
 

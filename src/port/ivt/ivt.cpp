@@ -3,12 +3,16 @@
 // The table is 1024 bytes long, stretching to 0x003FF
 // The table contains 256 entries with each entry being a far pointer sized 4 bytes
 // Each pointer points to a different interrupt handler - a code somewhere else in the RAM that handles this specific interrupt
+
+
 #include "../../types.h"
 #include "../port.h"
 #include "pic.h"
 #include "../../kernel.h"
+
 extern void PIC_sendEOI(uint8_t irq); // The EOI function from the pic.cpp file
 extern void fill_keyboard_buffer(uint8_t letter);
+
 //extern uint8_t inb(uint8_t portnumber);
 //extern void outb(uint8_t port, uint8_t data);
 // Define the Interrupt Vector Table (IVT) at a specific address
@@ -174,10 +178,7 @@ extern "C" void isr33()
     asm volatile("sti"); // Re-enable the interrupt flag, just in case
     PIC_sendEOI(1);
 
-    // we got the data from the keyboard now
-    // the keyboard driver needs to analyze it and fill the keyboard buffer
-
-    fill_keyboard_buffer(key_data);
+    fill_keyboard_buffer(char(key_data));
 }
 
 
