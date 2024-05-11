@@ -14,8 +14,22 @@
 //     pic.Write((uint8_t)0x11); // initialize the PIC
 // }
 
+static inline uint8_t inb(uint8_t portnumber)
+{
+     uint8_t result;
+     __asm__ volatile("inb %1, %0" : "=a" (result) : "Nd" (portnumber));
+     return result;
+}
+
+static inline void outb(uint16_t port, uint8_t data)
+{
+     __asm__ volatile("outb %0, %1" : : "a" (data), "Nd" (port));
+}
+
 extern "C" void init_pic()
 {
+
+
     uint16_t ICW1_INIT = 0x10; // ICW - initialization command word
     uint16_t ICW4_8086 = 0x01;
 

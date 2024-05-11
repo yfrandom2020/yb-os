@@ -4,8 +4,13 @@
 // The table contains 256 entries with each entry being a far pointer sized 4 bytes
 // Each pointer points to a different interrupt handler - a code somewhere else in the RAM that handles this specific interrupt
 #include "../../types.h"
+#include "../port.h"
+#include "pic.h"
+#include "../../kernel.h"
 extern void PIC_sendEOI(uint8_t irq); // The EOI function from the pic.cpp file
-
+extern void fill_keyboard_buffer(uint8_t letter);
+//extern uint8_t inb(uint8_t portnumber);
+//extern void outb(uint8_t port, uint8_t data);
 // Define the Interrupt Vector Table (IVT) at a specific address
 void (*IVT[256])() __attribute__((section(".ivt"))); // Tell the compiler that this will be saved in a special section named .ivt that will come at the beggining of the linked kernel file - in address 0x0
 // Creating an array with 256 objects, where each object is a pointer to a void function that takes and returns no arguments (the ISR)
@@ -162,10 +167,17 @@ extern "C" void isr32()
 extern "C" void isr33()
 {
     // Handle interrupt 33 - This is the keyboard interrupt
-    // Since the keyboard sits on IRQ 1 it means it's offset 1 from the 0x20 given to the PIC - 0x20 + 1 = 0x21 = 33
-    uint8_t key_data = inb(0x60);
+    // Since the keyboard sits on IRQ 1 it means it's offset 1 from the 0x20 given to the PIC: 0x20 + 1 = 0x21 = 33
+    Port8Bit keyboard((uint8_t)0x60);
+    uint8_t key_data = keyboard.Read();
+    //uint8_t key_data = inb(0x60);
     asm volatile("sti"); // Re-enable the interrupt flag, just in case
-    pic_send_eoi(1); // Assuming keyboard is connected to IRQ 1
+    PIC_sendEOI(1);
+
+    // we got the data from the keyboard now
+    // the keyboard driver needs to analyze it and fill the keyboard buffer
+
+    fill_keyboard_buffer(key_data);
 }
 
 
