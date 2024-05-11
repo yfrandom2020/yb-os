@@ -7,6 +7,7 @@
 #include "gdt/gdt.h"
 #include "port/ivt/pic.h"
 #include "port/ivt/ivt.h"
+#include "kernel.h"
 
 extern void init_pic(); // Telling the compiler that this is a function that will be called from a different file and will appear in the linking phase
 
@@ -26,36 +27,13 @@ void initialize_buffer()
 }
 
 
-// Extern "C" means that when compiling the source code, the name of the function will not be changed by the compiler
-// This is done in order to call function from other files, and making sure that the names are saved
 
-extern "C" void fill_keyboard_buffer(uint8_t letter)
-{
-    // This is part of the keyboard driver
-    // This function will be called by the ISR when the input happens
-    static int index = 0;
-    if (letter == "Enter") // Enter means that the current data that was typed will be inputted as a command to the kernel. In this case we will first reset the buffer and then execute the command
-    {
-        index = 0;
-        for (int i = 0; i < 128; i++)
-        {
-            keyboard_buffer[i] = "";
-        }
-        index = 0;
-    }
-    else if (index <= 127)
-    {
-        keyboard_buffer[index] = letter;
-        printf(letter);
-        index++;
-    }
-}
 
 uint8_t check_buffer_status()
 {
     // This function will be used by the kernel main loop to check for new input
     // This function keeps track of the keyboard buffer index and checks with it for updates
-    static previous_index = 0;
+    static int previous_index = 0;
 
     if (previous_index == keyboard_buffer_index) return '\0'; // This can only happen if there has been no output yet
 
@@ -100,6 +78,35 @@ void printf(char* str)
         }
     }
 }
+
+
+
+// Extern "C" means that when compiling the source code, the name of the function will not be changed by the compiler
+// This is done in order to call function from other files, and making sure that the names are saved
+
+extern "C" void fill_keyboard_buffer(uint8_t letter)
+{
+    // This is part of the keyboard driver
+    // This function will be called by the ISR when the input happens
+    static int index = 0;
+    if (letter == "Enter") // Enter means that the current data that was typed will be inputted as a command to the kernel. In this case we will first reset the buffer and then execute the command
+    {
+        index = 0;
+        for (int i = 0; i < 128; i++)
+        {
+            keyboard_buffer[i] = "";
+        }
+        index = 0;
+    }
+    else if (index <= 127)
+    {
+        keyboard_buffer[index] = letter;
+        printf(&letter);
+        index++;
+    }
+}
+
+
 
 
 // Conventions

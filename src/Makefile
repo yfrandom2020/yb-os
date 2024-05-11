@@ -12,6 +12,8 @@ all:
 
 	make loader.o
 
+	make kernel.o
+
 	make gdt/gdt.o
 
 	make port/port.o
@@ -20,27 +22,12 @@ all:
 
 	make port/ivt/ivt.o
 
-	make kernel.o
 
 	make mykernel.bin
 
 	make mykernel.iso
 
 	sudo mv $(all_objects) $(path)
-
-.PHONY: test_objects
-test_objects:
-	make loader.o
-
-	make gdt/gdt.o
-
-	make port/port.o
-
-	make port/ivt/pic.o
-
-	make port/ivt/ivt.o
-
-	make kernel.o
 
 
 %.o: %.cpp
