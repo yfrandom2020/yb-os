@@ -4,16 +4,16 @@ OUTPUT_ARCH(i386:i386)
 
 SECTIONS
 {
-    /*. = 0x000000;
+    . = 0x0000;
 
     .ivt : /* Define a section for the IVT */
-    /*{*/
+    {
         /* Place the IVT here */
-        /**(.ivt)
-    }*/
+        *(.ivt)
+    }
+    /* IVT goes until 0x3FF */
 
-
-    . = 0x100000;
+    . = 0x400; /* load the rest of the code right after the IVT ends */
     .text :
     {
         *(.multiboot)
