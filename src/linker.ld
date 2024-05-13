@@ -12,7 +12,8 @@ SECTIONS
     /*}*/
 
     /* IVT goes until 0x3FF */
-    . = 0x400; /* load the rest of the code right after the IVT ends */
+
+    . = 0x100000;
     .text :
     {
         *(.multiboot)
