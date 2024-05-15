@@ -6,15 +6,16 @@
 
 #include "types.h"
 #include "gdt/gdt.h"
-#include "port/ivt/pic.h"
-#include "port/ivt/ivt.h"
+#include "port/pic.h"
+#include "port/idt/idt.h"
 #include "kernel.h"
 
 
 extern void init_pic(); // Telling the compiler that this is a function that will be called from a different file and will appear in the linking phase
 extern void enable_interrupts();
 extern void PIC_sendEOI(uint8_t irq); // These are PIC related functions
-extern void initIVT();
+extern void idt_initialize();
+extern void idt_set_gate(int interrupt, void* base, uint16_t segment_descriptor, uint8_t flags);
 
 
 char command_buffer[KEYBOARD_BUFFER_SIZE]; // This buffer will contain the data from the keyboard - each time a data is inputted to the keyboard_buffer it will also be inputted into the command buffer. In case of line feed we will check the data stored in the command buffer
@@ -146,21 +147,20 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     char first_command[10] = "ben dover";
     commands[0] = first_command[0];
 
-    //GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
-
-
     // Completing a few steps before entering the main kernel loop
     // 1) Initialize the PIC
     // 2) Initialize the IVT
     // 3) Connect the drivers
     // 4) Re - enable interrupts
 
-    initialize_buffers();
-    init_pic();
-    initIVT();
-    printf(">");
-    enable_interrupts();
+    GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
 
+    initialize_buffers();
+
+    idt_initialize();
+
+    enable_interrupts();
+    printf(">");
     // Entering main kernel loop
     char* user_data = nullptr;
     while(true)

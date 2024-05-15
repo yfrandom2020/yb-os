@@ -1,51 +1,53 @@
 #include "gdt.h"
+// https://wiki.osdev.org/Global_Descriptor_Table
+// https://wiki.osdev.org/GDT_Tutorial
+// Gvahim os book - pages 118 to 130
+// Implmenting the constructors for the gdt table
 
-// implmenting the constructors for the gdt table
-
-GlobalDescriptorTable::GlobalDescriptorTable() // this is the constructor of an instance in the gdt class, each instance (we only need one) contains several segement selectors inside it
+GlobalDescriptorTable::GlobalDescriptorTable() // This is the constructor of an instance in the gdt class, each instance (we only need one) contains several segement selectors inside it
 : nullSegmentSelector(0,0,0),
 unusedSegmentSelector(0,0,0),
 codeSegmentSelector(0,64*1024*1024, 0x9A),
 dataSegmentSelector(0,64*1024*1024, 0x92)
 {
-    uint32_t i[2]; // array with two elements, each sized 4 bytes total 8 bytes
-    // it's loaded to the gdtr as address and size of gdt
+    uint32_t i[2]; // Array with two elements, each sized 4 bytes total 8 bytes
+    // It's loaded to the gdtr as address and size of gdt
 
-    //there is only a single object of the class GlobalDescriptorTable, we want to load this object into the gdtr
+    // There is only a single object of the class GlobalDescriptorTable, we want to load this object into the gdtr
 
 
-    i[0] = (uint32_t)this; // the address of the object the was just created
+    i[0] = (uint32_t)this; // The address of the object the was just created
 
-    i[1] = sizeof(GlobalDescriptorTable) << 16; // the size of the class
+    i[1] = sizeof(GlobalDescriptorTable) << 16; // The size of the class
 
-    asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // loading into the gdtr using inline assembly, pointer to the gdt object that was created
+    asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // Loading into the gdtr using inline assembly, pointer to the gdt object that was created
 }
 
 GlobalDescriptorTable::~GlobalDescriptorTable()
 {
-    // destructor of the gdt object
-    // doesn't actually gets used but defining for convention
+    // Destructor of the gdt object
+    // Doesn't actually gets used but defining for convention
 }
 
-uint16_t GlobalDescriptorTable::DataSegmentSelector() // return address of data segment (relative)
+uint16_t GlobalDescriptorTable::DataSegmentSelector() // Return address of data segment (relative)
 {
     return (uint8_t*)&dataSegmentSelector - (uint8_t*)this;
-    // for example if object begins in address 300 and data seg begins in 305 then the returned address will be 5, essentially this is the offset of each segment selector from the beggining of the table
+    // For example if object begins in address 300 and data seg begins in 305 then the returned address will be 5, essentially this is the offset of each segment selector from the beggining of the table
 }
 
 uint16_t GlobalDescriptorTable::CodeSegmentSelector()
 {
     return (uint8_t*)&codeSegmentSelector - (uint8_t*)this;
-    // same as previous
+    // Same as previous
 }
 
 
 GlobalDescriptorTable::SegmentDescriptor::SegmentDescriptor(uint32_t base, uint32_t limit, uint8_t flags)
 {
-    // parameters in: base - starting address (still in real mode) , limit - size in bytes, flags - the different permissions
-    // this is the constructor of a single entry in the gdt table
-    // each entry (called segement descriptor) describes a single segment
-    // parameters: base - starting address, limit - size, flags - type of segment
+    // Parameters in: base - starting address (still in real mode) , limit - size in bytes, flags - the different permissions
+    // This is the constructor of a single entry in the gdt table
+    // Each entry (called segement descriptor) describes a single segment
+    // Parameters: base - starting address, limit - size, flags - type of segment
     uint8_t* target = (uint8_t*) this;
 
     if(limit <= 65536)
@@ -75,8 +77,8 @@ GlobalDescriptorTable::SegmentDescriptor::SegmentDescriptor(uint32_t base, uint3
 }
 uint32_t GlobalDescriptorTable::SegmentDescriptor::Base()
 {
-    // get the base of a segment from a single entry of the table
-    // reverse the splitting action done in the entry constructor (segmentDescriptor)
+    // Get the base of a segment from a single entry of the table
+    // Reverse the splitting action done in the entry constructor (segmentDescriptor)
     uint8_t* target = (uint8_t*)this;
     uint32_t result = target[7];
     result = (result << 8) + target[4];
@@ -87,7 +89,7 @@ uint32_t GlobalDescriptorTable::SegmentDescriptor::Base()
 
 uint32_t GlobalDescriptorTable::SegmentDescriptor::Limit()
 {
-    // same as previous
+    // Same as previous
     uint8_t* target = (uint8_t*)this;
     uint32_t result = target[6] & 0xF;
     result = (result << 8) + target[1];

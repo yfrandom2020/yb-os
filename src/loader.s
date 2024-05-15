@@ -1,15 +1,16 @@
-# to set the stack pointer
+# This is an assembly loader file. This file contains the data required by the GRUB in order to validate the kernel as bootable code (in the partition table)
 .set MAGIC, 0x1badb002
 .set FLAGS, (1<<0 | 1<<1)
 .set CHECKSUM, -(MAGIC + FLAGS)
-
+# https://www.youtube.com/watch?v=1T26DpuKnVs - a simple youtube video that explaines well the relations between MBR, boot loader (first 446 bytes of MBR), partition table (64 bytes of MBR that specify the places of boot records in other places in the hard disk), boot record (the first piece of os that usually loads the rest of the os) and kernel
+# https://wiki.osdev.org/Boot_Sequence - until early enviroment section
 .section .multiboot
     .long MAGIC
     .long FLAGS
     .long CHECKSUM
 
 .section .text
-.extern kernelMain # .extern tells the compiler to not worry these function don't exist yet, since they will be added in the linking process (linker.ld)
+.extern kernelMain # .extern tells the compiler to not worry these function don't exist yet, since they will be added in the linking process
 .extern callConstructors
 .global loader
 

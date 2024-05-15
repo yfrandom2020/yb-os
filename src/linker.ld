@@ -1,17 +1,11 @@
+ /* relevant material */
+ /* https://wiki.osdev.org/Bare_Bones - linking the kernel section */
 ENTRY(loader)
 OUTPUT_FORMAT(elf32-i386)
 OUTPUT_ARCH(i386:i386)
 SECTIONS
 {
 
-    /*. = 0x0000;*/
-    /*.ivt : /* Define a section for the IVT */
-    /*{*/
-        /* Place the IVT here */
-        /**(.ivt)*/
-    /*}*/
-
-    /* IVT goes until 0x3FF */
 
     . = 0x100000;
     .text :
