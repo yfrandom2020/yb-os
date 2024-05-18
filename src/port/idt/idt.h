@@ -26,7 +26,7 @@ typedef enum {
     idt_flag_gate_task          = 0x5,
     idt_flag_gate_16bit_int     = 0x6,
     idt_flag_gate_16bit_trap    = 0x7,
-    idt_flag_fate_32bit_int     =0xe,
+    idt_flag_gate_32bit_int     =0xe,
     idt_flag_32bit_trap         =0xf,
     idt_flag_ring0              = (0 << 5),
     idt_flag_ring1              = (1 << 5),
@@ -38,6 +38,6 @@ typedef enum {
 extern "C" void idt_set_gate(int interrupt, void* base, uint16_t segment_descriptor, uint8_t flags);
 extern "C" void idt_initialize();
 extern "C" void set_flag(int interrupt);
-extern "C" void disable_flag(int interrupt)
+extern "C" void disable_flag(int interrupt);
 
 #endif
