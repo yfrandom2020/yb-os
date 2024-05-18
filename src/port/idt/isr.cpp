@@ -1,6 +1,6 @@
 #include "isr.h"
 #include "idt.h"
-#include "../gdt.h"
+#include "gdt/gdt.h"
 #include "../../kernel.h"
 #include "../../types.h"
 
@@ -47,9 +47,9 @@ void ISR_Initialize()
 {
     ISR_InitializeGates();
     for (int i = 0; i < 256; i++)
-        i686_IDT_EnableGate(i);
+        set_flag(i);
 
-    i686_IDT_DisableGate(0x80);
+    disable_flag(0x80);
 }
 
 void __attribute__((cdecl)) ISR_Handler(Registers* regs)

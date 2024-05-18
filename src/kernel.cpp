@@ -4,12 +4,12 @@
 // The main function is kernelMain which will in turn call the other functions, such as IVT and PIC related function
 /*--------------------------------------------------------------------------------------------------------------------*/
 
+#include "kernel.h"
 #include "types.h"
 #include "gdt/gdt.h"
 #include "port/port.h"
 #include "port/pic.h"
 #include "port/idt/idt.h"
-#include "kernel.h"
 #include "port/idt/isr.h"
 
 extern void init_pic(); // Telling the compiler that this is a function that will be called from a different file and will appear in the linking phase

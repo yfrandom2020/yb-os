@@ -1,5 +1,5 @@
 #include "idt.h"
-#include "gdt.h"
+#include "gdt/gdt.h"
 
 void __attribute((cdecl)) ISR0();
 void __attribute((cdecl)) ISR1();
