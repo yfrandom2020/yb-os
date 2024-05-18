@@ -3,7 +3,7 @@ ASPARAMS = --32
 LDPARAMS = -melf_i386
 objects = loader.o kernel.o gdt.o port.o pic.o idt.o
 all_objects = $(objects) mykernel.bin mykernel.iso
-path = /home/fridkin/os/yb-os/parts
+path = /home/fridkin/os/yb-os/objects
 first_path = /home/fridkin/os/yb-os/src
 
 .PHONY: all

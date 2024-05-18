@@ -58,7 +58,7 @@ void __attribute__((cdecl)) ISR_Handler(Registers* regs)
         ISRHandlers[regs->interrupt](regs);
 
     else if (regs->interrupt >= 32)
-        printf("Unhandled interrupt %d!\n", regs->interrupt);
+        printf((uint8_t*)"Unhandled interrupt %d!\n", regs->interrupt);
 
     else
     {
