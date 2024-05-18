@@ -20,6 +20,17 @@ extern "C" void idt_initialize()
 {
 
     // Loading the address and size of IDT to the idtr register using inline assembly
-    // Will be called from the kernel
+    // Will be called from the kernel main
     asm volatile("lidt (%0)" : : "p" (&idtr));
+}
+
+// The following two function enable and disable the "present" flag in a single idt entry
+extern "C" void set_flag(int interrupt)
+{
+    FLAG_SET(IDT[interrupt].Flags, idt_flag_present);
+}
+
+extern "C" void disable_flag(int interrupt)
+{
+    FLAG_UNSET(IDT[interrupt].Flags, idt_flag_present);
 }

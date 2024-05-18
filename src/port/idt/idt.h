@@ -2,6 +2,7 @@
 #define __IDT_H
 #include "../../types.h"
 #include "../port.h"
+#include "util.h"
 // This is the IDT header file. The idt (interrupt descriptor table) is a table that holds the different ISR (interrupt service routines)
 // The IDT is similar in structure to the GDT with the structure being very much alike
 // https://wiki.osdev.org/Interrupt_Descriptor_Table
@@ -30,11 +31,13 @@ typedef enum {
     idt_flag_ring0              = (0 << 5),
     idt_flag_ring1              = (1 << 5),
     idt_flag_ring2              = (2 << 5),
-    idt_flag_ring3              = (3 << 5),
+    idt_flag_ring3              = (3 << 5), // These flags represent the different levels of authority for the interrupt call - 0 means kernel and 3 means userland. 1 is usually driver
     idt_flag_present            = 0x80
 } idt_flags;
 
 extern "C" void idt_set_gate(int interrupt, void* base, uint16_t segment_descriptor, uint8_t flags);
 extern "C" void idt_initialize();
+extern "C" void set_flag();
+extern "C" disable_flag()
 
 #endif
