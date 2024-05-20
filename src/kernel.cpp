@@ -2,16 +2,9 @@
 // This is the main kernel file
 // This file is the main code that gets exectuted upon booting the os
 // The main function is kernelMain which will in turn call the other functions, such as IVT and PIC related function
+// Realistically, this os follows a monolythic kernel design so all processes are level 0
 /*--------------------------------------------------------------------------------------------------------------------*/
-
 #include "kernel.h"
-#include "types.h"
-#include "gdt/gdt.h"
-#include "port/port.h"
-#include "port/pic.h"
-#include "port/idt/idt.h"
-//#include "port/idt/isr.h"
-
 extern void init_pic(); // Telling the compiler that this is a function that will be called from a different file and will appear in the linking phase
 extern void enable_interrupts();
 extern void PIC_sendEOI(uint8_t irq); // These are PIC related functions

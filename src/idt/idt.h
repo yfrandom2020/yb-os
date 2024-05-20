@@ -1,7 +1,7 @@
 #ifndef __IDT_H
 #define __IDT_H
-#include "../../types.h"
-#include "../port.h"
+#include "../types.h"
+#include "port/port.h"
 #include "util.h"
 // This is the IDT header file. The idt (interrupt descriptor table) is a table that holds the different ISR (interrupt service routines)
 // The IDT is similar in structure to the GDT with the structure being very much alike
