@@ -1,3 +1,9 @@
+// After preparing the IDT (an array containing ISR) we need to load the ISR's into it
+// In order to implement ISR (interrupt service routine) we need to do a few things
+
+// Each ISR is a simple and short function that does a small task
+// There is a problem: we can't use inline assembly since it's risky and might corrupt the stack
+// Therefore we will have a small assembly stub that pushes specific values and then calls a general ISR handling function (aka ISR_Handler)
 #ifndef __ISR_H
 #define __ISR_H
 
@@ -11,7 +17,8 @@
 typedef struct
 {
     // A useful struct that is used to represnt the values of the registers when pushed into the stack
-    
+    // The general ISR_Handler receives a struct of this type and using the values inside it, it deciphers which ISR was called
+
     uint32_t ds;                                            // data segment pushed by us
     uint32_t edi, esi, ebp, useless, ebx, edx, ecx, eax;    // pusha
     uint32_t interrupt, error;                              // we push interrupt, error is pushed automatically (or dummy)

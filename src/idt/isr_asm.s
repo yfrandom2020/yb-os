@@ -1,17 +1,15 @@
 # Now we need to populate the IDT and fill it with the different interrupt handlers (exceptions, keyboard, timer..)
-# It's problematic to use inline assembly and write in C++ everything so we will have an assembly file that generates 255 stubs that jump to a C++ function
 # Cpu pushes to the stack: ss, esp, eflags, cs, eip when having an interrupt in kernel mode which will happen most of the time
 
-
-.extern ISR_Handler 
+.extern ISR_Handler # The general ISR handler
 
 #-------------------------------------------------------------------
 .macro ISR_NOERRORCODE num
-.global ISR\num\()
+.global ISR\num\() # generate the global address
 ISR\num\():
     pushl $0              # push dummy error code
     pushl $\num            # push interrupt number
-    jmp isr_common
+    jmp isr_common          # a common address jumped to by all stubs before calling ISR_Handler - responsible for pushing the right values to the stack before ISR itself
 .endm
 
 .macro ISR_ERRORCODE num
@@ -22,11 +20,10 @@ ISR\num\():
     jmp isr_common
 .endm
 
-.include "idt/isrs_gen.inc"
+.include "idt/isrs_gen.inc" # Initiate macro invoking
 #----------------------------------------------------------------------- These macros are replicated - these are simple stubs for each of the 256 different interrupts - differentiated by the number
-# All of these macros jump to the same place since they all push the same values before being executed
 
-isr_common: # This is a common place all the previously generated stubs reach. First push values to save the state of the kernel before executing the ISR and then jump to it
+isr_common:
     pusha               # Save all the values in the registers - pushes in order eax, ecx, edx, ebx, esp, ebp, esi, edi
 
     xor %eax, %eax      # clear eax for segment operations

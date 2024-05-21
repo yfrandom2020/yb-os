@@ -4,7 +4,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-void __attribute((cdecl)) ISR0();
+void __attribute((cdecl)) ISR0(); // Connect to the stubs defined in the assembly file - This is simply a declaration and the code within the function is filled by isr_asm.s
 void __attribute((cdecl)) ISR1();
 void __attribute((cdecl)) ISR2();
 void __attribute((cdecl)) ISR3();
