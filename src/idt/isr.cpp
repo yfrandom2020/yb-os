@@ -38,9 +38,7 @@ static const char* const Exceptions[] = { // The first 32 entries in the IDT are
     ""
 };
 
-void ISR_InitializeGates();
-
-void ISR_Initialize()
+extern "C" void ISR_Initialize()
 {
     ISR_InitializeGates();
     for (int i = 0; i < 256; i++)
@@ -49,7 +47,7 @@ void ISR_Initialize()
     disable_flag(0x80);
 }
 
-void __attribute__((cdecl)) ISR_Handler(Registers* regs)
+extern "C" void __attribute__((cdecl)) ISR_Handler(Registers* regs)
 {
     if (ISRHandlers[regs->interrupt] != nullptr)
         ISRHandlers[regs->interrupt](regs);
