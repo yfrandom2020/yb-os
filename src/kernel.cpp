@@ -5,11 +5,7 @@
 // Realistically, this os follows a monolythic kernel design so all processes are level 0
 /*--------------------------------------------------------------------------------------------------------------------*/
 #include "kernel.h"
-extern void init_pic(); // Telling the compiler that this is a function that will be called from a different file and will appear in the linking phase
-extern void enable_interrupts();
-extern void PIC_sendEOI(uint8_t irq); // These are PIC related functions
-extern void idt_initialize();
-extern void idt_set_gate(int interrupt, void* base, uint16_t segment_descriptor, uint8_t flags);
+
 
 int8_t command_buffer[KEYBOARD_BUFFER_SIZE]; // This buffer will contain the data from the keyboard - each time a data is inputted to the keyboard_buffer it will also be inputted into the command buffer. In case of line feed we will check the data stored in the command buffer
 int8_t keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // Initializing a keyboard buffer that will contain what is typed
@@ -147,13 +143,18 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // 3) Connect the drivers
     // 4) Re - enable interrupts
 
+    initialize_buffers();
+    
     GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
 
-    initialize_buffers();
+    idt_initialize(); // loading the idt into idtr
 
-    idt_initialize();
+    ISR_Initialize();
 
+    init_pic();
+    
     enable_interrupts();
+    
     printf((uint8_t*)">");
     // Entering main kernel loop
     int8_t* user_data = nullptr;

@@ -1,7 +1,6 @@
 #ifndef __KERNEL_H
 #define __KERNEL_H
 #include "types.h"
-#include "kernel.h"
 #include "types.h"
 #include "gdt/gdt.h"
 #include "port/port.h"

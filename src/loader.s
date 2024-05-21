@@ -28,7 +28,7 @@ _stop: # a never ending loop added as a security measure, in case the call comma
 
 
 .section .bss
-.space 2*1024*1024 # 2 MB
+.space 2*1024*1024 # Initializing the kernel stack after spacing 2 MB for additional room for code
 kernel_stack:
 
 

@@ -1,12 +1,9 @@
 #include "isr.h"
-#include "idt.h"
-#include "gdt/gdt.h"
-#include "../kernel.h"
-#include "../types.h"
 
-ISRHandler ISRHandlers[256];
 
-static const char* const Exceptions[] = {
+ISRHandler ISRHandlers[256]; // Each element in this array is a pointer to a void function - a single isr that receives as input the state of the registers
+
+static const char* const Exceptions[] = { // The first 32 entries in the IDT are called exceptions and are reserved - for compiler errors 
     "Divide by zero error",
     "Debug",
     "Non-maskable Interrupt",
@@ -54,8 +51,10 @@ void ISR_Initialize()
 
 void __attribute__((cdecl)) ISR_Handler(Registers* regs)
 {
-    if (ISRHandlers[regs->interrupt] != NULL)
+    if (ISRHandlers[regs->interrupt] != nullptr)
         ISRHandlers[regs->interrupt](regs);
+
+    else printf((uint8_t*)"error");    
 
     // else if (regs->interrupt >= 32)
     //     printf((uint8_t*)"Unhandled interrupt %d!\n", regs->interrupt);
@@ -81,6 +80,7 @@ void __attribute__((cdecl)) ISR_Handler(Registers* regs)
 
 void ISR_RegisterHandler(int interrupt, ISRHandler handler)
 {
+    // Fill a single entry in the idt with the isr code
     ISRHandlers[interrupt] = handler;
     set_flag(interrupt);
 }

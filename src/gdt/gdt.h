@@ -48,5 +48,5 @@
         uint16_t DataSegmentSelector();
 
     };
-
+#define GDT_CODE_SEGMENT 0x08
 #endif
