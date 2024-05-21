@@ -5,7 +5,7 @@
 // Realistically, this os follows a monolythic kernel design so all processes are level 0
 /*--------------------------------------------------------------------------------------------------------------------*/
 #include "kernel.h"
-
+#include <stddef.h>
 
 int8_t command_buffer[KEYBOARD_BUFFER_SIZE]; // This buffer will contain the data from the keyboard - each time a data is inputted to the keyboard_buffer it will also be inputted into the command buffer. In case of line feed we will check the data stored in the command buffer
 int8_t keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // Initializing a keyboard buffer that will contain what is typed
@@ -145,7 +145,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     initialize_buffers();
     
-    GlobalDescriptorTable gdt; // initialize a gdt, will only be used in the case of complete virtual memory
+    GlobalDescriptorTable gdt; 
 
     idt_initialize(); // loading the idt into idtr
 
