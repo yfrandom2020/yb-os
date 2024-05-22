@@ -7,10 +7,10 @@
 #ifndef __ISR_H
 #define __ISR_H
 
-#include "../types.h"
-#include "idt.h"
-#include "../gdt/gdt.h"
-#include "../kernel.h"
+#include "../../types.h"
+#include "../idt.h"
+#include "../../gdt/gdt.h"
+#include "../../kernel.h"
 #include "isrgen.h"
 
 
