@@ -13,6 +13,7 @@
 #include "../../kernel.h"
 #include "isrgen.h"
 
+ISRHandler ISRHandlers[256]; // Each element in this array is a pointer to a void function - a single isr that receives as input the state of the registers
 
 typedef struct
 {

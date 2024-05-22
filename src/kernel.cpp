@@ -143,6 +143,8 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // 3) Connect the drivers
     // 4) Re - enable interrupts
 
+
+
     initialize_buffers();
     
     GlobalDescriptorTable gdt; 
@@ -151,7 +153,9 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     ISR_Initialize();
 
-    init_pic();
+    init_pic(); // init_pic also masks all interrups
+
+    populate_irq_entries(); // Filling in the ISRHandlers array
     
     enable_interrupts();
     

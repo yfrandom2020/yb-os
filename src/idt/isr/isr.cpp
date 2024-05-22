@@ -1,8 +1,5 @@
 #include "isr.h"
 
-
-ISRHandler ISRHandlers[256]; // Each element in this array is a pointer to a void function - a single isr that receives as input the state of the registers
-
 static const char* const Exceptions[] = { // The first 32 entries in the IDT are called exceptions and are reserved for compiler errors 
     "Divide by zero error",
     "Debug",
