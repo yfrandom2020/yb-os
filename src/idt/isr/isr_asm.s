@@ -20,7 +20,7 @@ ISR\num\():
     jmp isr_common
 .endm
 
-.include "idt/isrs_gen.inc" # Initiate macro invoking
+.include "idt/isr/isrs_gen.inc" # Initiate macro invoking
 #----------------------------------------------------------------------- These macros are replicated - these are simple stubs for each of the 256 different interrupts - differentiated by the number
 
 isr_common:

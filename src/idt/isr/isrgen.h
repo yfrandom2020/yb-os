@@ -1,5 +1,4 @@
-#ifndef __ISRSGEN_H
-#define ___ISRGEN_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -263,5 +262,4 @@ void __attribute((cdecl)) ISR255();
 void ISR_InitializeGates();
 #ifdef __cplusplus
 }
-#endif
 #endif

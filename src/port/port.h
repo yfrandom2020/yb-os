@@ -1,5 +1,4 @@
-#ifndef __PORT_H
-#define __PORT_H
+#pragma once
 #include "../types.h"
 // this is the port communication part
 // in order to receive data from I/O devices it's necessary to speak to the ports that connect them to the computer
@@ -58,4 +57,3 @@
         virtual uint32_t Read();
 
     };
-#endif

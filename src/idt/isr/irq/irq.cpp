@@ -1,29 +1,27 @@
 // In this file we will handle the hardware interrupts received from components such as keyboard and timer
 #include "irq.h"
 
-
-void __attribute__((cdecl)) keyboard(Registers* state)
+void Keyboard(Registers* state)
 {
     // Keyboard isr  
     // 1. Read from the relevant port (0x60) the data of the keyboard
     // 2. Translate to ASCII
     // Forward to kernel buffers
     printf((uint8_t*)".");
-    if (state->interrupt < 0xA0) PIC_sendEOI(state->interrupt - PIC1); // The input is the irq number
-    else PIC_sendEOI(state->interrupt - PIC2);
+    PIC_sendEOI(state->interrupt - PIC1);
 }
 
-void __attribute__((cdecl)) timer(Registers* state)
+void Timer(Registers* state)
 {
     // The timer interrupt is an interrupt sent by the timer in set intervals
     // There isn't much to implement since we aren't implemeting context switching
 
 
     printf((uint8_t*)".");
-
+    PIC_sendEOI(state->interrupt - PIC1);
 }
 
-void __attribute__((cdecl)) populate_irq_entries()
+void Populate_Irq_Entries()
 {
     // The ISRHandlers array in the isr.cpp contains an array of void pointers to the ISR themselves
     
@@ -35,6 +33,6 @@ void __attribute__((cdecl)) populate_irq_entries()
     // After pushing some values, the general purpose ISR_Handler is called with the state of teh registers as input (Registers* state)
 
     // We populate ISRHandlers with the irqs we defined
-    ISR_RegisterHandler(PIC1 + 0, timer);
-    ISR_RegisterHandler(PIC1 + 1, keyboard);
+    ISR_RegisterHandler(PIC1 + 0, Timer);
+    ISR_RegisterHandler(PIC1 + 1, Keyboard);
 }

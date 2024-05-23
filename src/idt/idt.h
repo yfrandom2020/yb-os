@@ -1,5 +1,4 @@
-#ifndef __IDT_H
-#define __IDT_H
+#pragma once
 #include "../types.h"
 #include "../port/port.h"
 #include "util.h"
@@ -40,4 +39,3 @@ extern "C" void idt_initialize();
 extern "C" void set_flag(int interrupt);
 extern "C" void disable_flag(int interrupt);
 
-#endif

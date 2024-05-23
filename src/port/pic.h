@@ -1,8 +1,7 @@
 // This is a header file that contains a few variables relating to the pic.cpp file
 // Pic related variables - ports of pics, as well as some commands that are sent to them
 
-#ifndef __PIC_H
-#define __PIC_H
+#pragma once
 #include "../types.h"
 
 
@@ -20,6 +19,3 @@ static inline void outb(uint16_t port, uint8_t data);
 extern "C" void init_pic();
 extern "C" void enable_interrupts();
 extern "C" void PIC_sendEOI(uint8_t irq);
-
-
-#endif

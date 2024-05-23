@@ -63,37 +63,37 @@ void initialize_buffers()
 }
 
 
-int8_t* check_buffer_status()
-{
-    // This function will be used by the kernel main loop to check for new input
-    // This function keeps track of the keyboard buffer index and checks with it for updates
-    bool flag = false;
-    int32_t index = -1; // Save the index of the \n character
-    // First search the command buffer for \n.
-    // If found, there is a command to be executed we will extract it from the command buffer and then re initialize it
-    // Else, return false
-    for (int32_t i = 0; i < 128 && !flag; i++)
-    {
-        if (command_buffer[i] = '\n')
-        {
-             flag = true;
-             index = i;
-        }
-    }
-    if (flag)
-    {
-        int8_t arr[index];
-        for (int8_t j = 0; j < index; j++)
-        {
-            arr[j] = command_buffer[j];
-        }
-        return &arr[0];
-    }
-    else
-    {
-        return nullptr;
-    }
-}
+// int8_t* check_buffer_status()
+// {
+//     // This function will be used by the kernel main loop to check for new input
+//     // This function keeps track of the keyboard buffer index and checks with it for updates
+//     bool flag = false;
+//     int32_t index = -1; // Save the index of the \n character
+//     // First search the command buffer for \n.
+//     // If found, there is a command to be executed we will extract it from the command buffer and then re initialize it
+//     // Else, return false
+//     for (int32_t i = 0; i < 128 && !flag; i++)
+//     {
+//         if (command_buffer[i] = '\n')
+//         {
+//              flag = true;
+//              index = i;
+//         }
+//     }
+//     if (flag)
+//     {
+//         int8_t arr[index];
+//         for (int8_t j = 0; j < index; j++)
+//         {
+//             arr[j] = command_buffer[j];
+//         }
+//         return &arr[0];
+//     }
+//     else
+//     {
+//         return nullptr;
+//     }
+// }
 
 
 // Extern "C" means that when compiling the source code, the name of the function will not be changed by the compiler
@@ -155,7 +155,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     init_pic(); // init_pic also masks all interrups
 
-    populate_irq_entries(); // Filling in the ISRHandlers array
+    Populate_Irq_Entries(); // Filling in the ISRHandlers array
     
     enable_interrupts();
     
@@ -164,8 +164,8 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     int8_t* user_data = nullptr;
     while(true)
     {
-        user_data = check_buffer_status();
-        if (user_data != nullptr)
+        //user_data = check_buffer_status();
+        //if (user_data != nullptr)
         {
             // We got data so we begin by re - initializing the buffers
             initialize_buffers();
