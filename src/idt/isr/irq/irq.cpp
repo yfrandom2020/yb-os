@@ -1,7 +1,6 @@
 // In this file we will handle the hardware interrupts received from components such as keyboard and timer
 #include "irq.h"
 
-ISRHandler irq[16];
 
 void __attribute__((cdecl)) keyboard(Registers* state)
 {
@@ -36,7 +35,6 @@ void __attribute__((cdecl)) populate_irq_entries()
     // After pushing some values, the general purpose ISR_Handler is called with the state of teh registers as input (Registers* state)
 
     // We populate ISRHandlers with the irqs we defined
-
-    ISRHandlers[PIC1 + 0] = timer;
-    ISRHandlers[PIC1 + 1] = keyboard;
+    ISR_RegisterHandler(PIC1 + 0, timer);
+    ISR_RegisterHandler(PIC1 + 1, keyboard);
 }

@@ -87,7 +87,7 @@ int8_t* check_buffer_status()
         {
             arr[j] = command_buffer[j];
         }
-        return &(arr[0]);
+        return &arr[0];
     }
     else
     {

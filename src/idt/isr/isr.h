@@ -13,8 +13,6 @@
 #include "../../kernel.h"
 #include "isrgen.h"
 
-ISRHandler ISRHandlers[256]; // Each element in this array is a pointer to a void function - a single isr that receives as input the state of the registers
-
 typedef struct
 {
     // A useful struct that is used to represnt the values of the registers when pushed into the stack
@@ -27,7 +25,7 @@ typedef struct
 } __attribute__((packed)) Registers;
 
 typedef void (*ISRHandler)(Registers* regs); // We define a new type - ISRHANDLER is a pointer to a void function that receives the Registers struct as input
-
+ISRHandler ISRHandlers[256]; // Each element in this array is a pointer to a void function - a single isr that receives as input the state of the registers
 extern "C" void ISR_Initialize();
 void ISR_RegisterHandler(int interrupt, ISRHandler handler);
 extern "C" void __attribute__((cdecl)) ISR_Handler(Registers* regs); // cdecl is a calling convention in function. The way it works is that variables are pushed to the stack from right to left and the function is responsible for cleaning in the end of the run
