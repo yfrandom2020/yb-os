@@ -33,6 +33,7 @@ void Populate_Irq_Entries()
     // After pushing some values, the general purpose ISR_Handler is called with the state of teh registers as input (Registers* state)
 
     // We populate ISRHandlers with the irqs we defined
+    printf((uint8_t*)"entered populate \n");
     ISR_RegisterHandler(PIC1 + 0, Timer);
     ISR_RegisterHandler(PIC1 + 1, Keyboard);
 }

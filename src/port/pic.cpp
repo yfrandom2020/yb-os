@@ -25,14 +25,14 @@ extern "C" void init_pic()
 {
     // Send initializing commands to the two PICs
 
-
+    printf((uint8_t*)"entered init_pic \n");
     uint16_t ICW1_INIT = 0x10; // ICW - initialization command word
     uint16_t ICW4_8086 = 0x01;
 
 
     // Initialize PIC1
     outb(PIC1_COMMAND, ICW1_INIT | ICW4_8086);
-    outb(PIC1_DATA, 0x20); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's ivt offset starts with the number 0x20 which is 32. This is because the first 32 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
+    outb(PIC1_DATA, 0x20); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's idt offset starts with the number 0x20 which is 32. This is because the first 32 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
     outb(PIC1_DATA, 0x04); // Tell PIC1 that there is a slave PIC at IRQ2 (0000 0100)
     outb(PIC1_DATA, 0x01); // 8086 mode
 
@@ -49,6 +49,8 @@ extern "C" void init_pic()
     outb(PIC2_DATA, 0xFF);
     // This is a convention process done at the initialization process
     // In order to prevent spurios IRQ the interrupts sent to the PIC's are disabled until the system is fully booted and only then are enabled
+
+    printf((uint8_t*)"ended init_pic \n");
 }
 
 

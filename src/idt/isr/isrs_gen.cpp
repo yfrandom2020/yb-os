@@ -6,6 +6,7 @@
 
 void ISR_InitializeGates()
 {
+    printf((uint8_t*)"Entered isr initilize gates \n");
     idt_set_gate(0, ISR0, GDT_CODE_SEGMENT, idt_flag_ring0 | idt_flag_gate_32bit_int); 
     idt_set_gate(1, ISR1, GDT_CODE_SEGMENT, idt_flag_ring0 | idt_flag_gate_32bit_int);
     idt_set_gate(2, ISR2, GDT_CODE_SEGMENT, idt_flag_ring0 | idt_flag_gate_32bit_int);
