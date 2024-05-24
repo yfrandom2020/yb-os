@@ -10,7 +10,7 @@
 #include "../idt.h"
 #include "../../gdt/gdt.h"
 #include "isrgen.h"
-
+#include <stddef.h>
 
 void printf(uint8_t* ptr);
 

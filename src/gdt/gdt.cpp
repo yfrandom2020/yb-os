@@ -6,8 +6,8 @@
 
 GlobalDescriptorTable::GlobalDescriptorTable() // This is the constructor of an instance in the gdt class, each instance (we only need one) contains several segement selectors inside it
 : nullSegmentSelector(0,0,0),
-unusedSegmentSelector(0,0,0),
 codeSegmentSelector(0,64*1024*1024, 0x9A),
+unusedSegmentSelector(0,0,0),
 dataSegmentSelector(0,64*1024*1024, 0x92)
 {
     uint32_t i[2]; // Array with two elements, each sized 4 bytes total 8 bytes
@@ -21,6 +21,8 @@ dataSegmentSelector(0,64*1024*1024, 0x92)
     i[1] = sizeof(GlobalDescriptorTable) << 16; // The size of the class
 
     asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // Loading into the gdtr using inline assembly, pointer to the gdt object that was created
+
+    printf((uint8_t*)"initialized table");
 }
 
 GlobalDescriptorTable::~GlobalDescriptorTable()

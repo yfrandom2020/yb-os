@@ -12,6 +12,9 @@
 #define PIC2_COMMAND	PIC2 // Command port of the slave PIC
 #define PIC2_DATA	(PIC2+1) // Data port of the slave PIC
 #define PIC_EOI 	0x20		/* End-of-interrupt command code */
+#define PIC1_BASE_IRQ           32 // the first address of pic 1 in idt
+#define PIC2_BASE_IRQ           PIC1_BASE_IRQ + 8
+
 
 void printf(uint8_t* letter);
 static inline uint8_t inb(uint8_t portnumber);

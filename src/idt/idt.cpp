@@ -34,3 +34,4 @@ extern "C" void disable_flag(int interrupt)
 {
     FLAG_UNSET(IDT[interrupt].Flags, idt_flag_present);
 }
+

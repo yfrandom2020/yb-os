@@ -5,9 +5,14 @@ objects = loader.o kernel.o gdt.o port.o pic.o idt.o isrs_gen.o isr.o isr_asm.o 
 all_objects = $(objects) mykernel.bin mykernel.iso
 path = /home/fridkin/os/yb-os/objects
 first_path = /home/fridkin/os/yb-os/src
+shared_path = /mnt/hgfs/vm-shared-2
 
 .PHONY: all
 all:
+	clear
+
+	make second_clean
+
 	make clean
 
 	make loader.o
@@ -91,8 +96,17 @@ mykernel.iso: mykernel.bin
 	grub-mkrescue --output=$@ iso
 	rm -rf iso
 
+	sudo cp $@ $(shared_path)
+
 
 .PHONY: clean
 clean:
 	@cd $(path) && \
 	rm -f $(objects) mykernel.bin mykernel.iso
+	rm -f $(shared_path)/mykernel.iso
+
+.PHONY: second_clean
+second_clean:
+	rm -f $(objects) 
+
+

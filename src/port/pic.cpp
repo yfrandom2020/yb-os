@@ -32,21 +32,21 @@ extern "C" void init_pic()
 
     // Initialize PIC1
     outb(PIC1_COMMAND, ICW1_INIT | ICW4_8086);
-    outb(PIC1_DATA, 0x20); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's idt offset starts with the number 0x20 which is 32. This is because the first 32 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
+    outb(PIC1_DATA, PIC1_BASE_IRQ); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's idt offset starts with the number 0x20 which is 32. This is because the first 32 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
     outb(PIC1_DATA, 0x04); // Tell PIC1 that there is a slave PIC at IRQ2 (0000 0100)
     outb(PIC1_DATA, 0x01); // 8086 mode
 
 
     // Initialize PIC2
     outb(PIC2_COMMAND, ICW1_INIT | ICW4_8086);
-    outb(PIC2_DATA, 0x28); // PIC2 base IRQ is 0x28
+    outb(PIC2_DATA, PIC2_BASE_IRQ); // PIC2 base IRQ is 0x28
     outb(PIC2_DATA, 0x02); // Tell PIC2 its cascade identity (0000 0010)
     outb(PIC2_DATA, 0x01); // 8086 mode
 
 
     // Mask all interrupts
-    outb(PIC1_DATA, 0xFF);
-    outb(PIC2_DATA, 0xFF);
+    //outb(PIC1_DATA, 0xFF);
+    //outb(PIC2_DATA, 0xFF);
     // This is a convention process done at the initialization process
     // In order to prevent spurios IRQ the interrupts sent to the PIC's are disabled until the system is fully booted and only then are enabled
 

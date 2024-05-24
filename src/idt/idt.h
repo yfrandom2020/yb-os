@@ -38,4 +38,5 @@ extern "C" void idt_set_gate(int interrupt, void* base, uint16_t segment_descrip
 extern "C" void idt_initialize();
 extern "C" void set_flag(int interrupt);
 extern "C" void disable_flag(int interrupt);
+void idt_load_assembly(idt_descriptor* ptr);
 

@@ -27,7 +27,7 @@ void printf(uint8_t* str)
             case '\n': // New line
                 y++;
                 x = 0;
-                VideoMemory[80*y + x] = (VideoMemory[80*y + x]&0xFF00) | (int32_t)">";
+                //VideoMemory[80*y + x] = (VideoMemory[80*y + x]&0xFF00) | (int32_t)">";
                 break;
             default:
                 VideoMemory[80*y + x] = (VideoMemory[80*y + x]&0xFF00) | str[i];
@@ -134,6 +134,8 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
     printf((uint8_t*)"Hello World! \n");
+    
+    
     int8_t first_command[10] = "ben dover";
     commands[0] = first_command;
 
@@ -146,32 +148,42 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
 
     initialize_buffers();
+
+    printf((uint8_t*)"buffesr initialized \n");
     
     GlobalDescriptorTable gdt; 
 
-    idt_initialize(); // loading the idt into idtr
+    printf((uint8_t*)"gdt initialized \n");
+
+    idt_initialize(); // loading the idt into idtr - the array exists
+
+    printf((uint8_t*)"idt initialized \n");
 
     ISR_Initialize();
 
+    printf((uint8_t*)"isr initialized \n");
+
     init_pic(); // init_pic also masks all interrups
 
+    printf((uint8_t*)"pic initialized \n");
+
     Populate_Irq_Entries(); // Filling in the ISRHandlers array
+
+    printf((uint8_t*)"irq initialized \n");
     
     enable_interrupts();
     
-    printf((uint8_t*)">!");
+    printf((uint8_t*)"interrupts initialized \n");
+
+    printf((uint8_t*)">!!!!):");
     // Entering main kernel loop
     int8_t* user_data = nullptr;
-    while(true)
-    {
-        //user_data = check_buffer_status();
-        //if (user_data != nullptr)
-        {
-            // We got data so we begin by re - initializing the buffers
-            initialize_buffers();
-            // Now we should figure out if the data is one of the available commands
 
-        }
+    while (true)
+    {
+        continue;
     }
+    
+    
 }
 

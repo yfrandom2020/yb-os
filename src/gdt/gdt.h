@@ -1,6 +1,7 @@
 #ifndef __GDT_H
 #define __GDT_H
 #include "../types.h"
+void printf(uint8_t* letter);
 
 // this is the global descriptor table
 // the global descriptor table is the first step (out of two with the second being implmenting paging) in implementing virtualization
@@ -34,9 +35,10 @@
 
         // initializing segments
         SegmentDescriptor nullSegmentSelector;
+        SegmentDescriptor codeSegmentSelector;
         SegmentDescriptor unusedSegmentSelector;
         // initially one code segment and one data segment for the kernel space
-        SegmentDescriptor codeSegmentSelector;
+        
         SegmentDescriptor dataSegmentSelector;
 
     //public:

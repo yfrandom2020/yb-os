@@ -43,7 +43,8 @@ extern "C" void ISR_Initialize()
 {
     printf((uint8_t*)"entered ISR initialize \n");
     
-    ISR_InitializeGates(); // For each of the entries in the IDT: Set it up by calling the idt_set_gate and passing the base address of the ISR, as well as general parameters
+    ISR_InitializeGates(); 
+    // For each of the entries in the IDT: Set it up by calling the idt_set_gate and passing the base address of the ISR, as well as general parameters
     printf((uint8_t*)"Continuing execution \n");
     for (int i = 0; i < 256; i++)
         set_flag(i); // Also enable the flag
@@ -68,8 +69,8 @@ extern "C" void __attribute__((cdecl)) ISR_Handler(Registers* regs)
     // This is a general purpose ISR handler
     // This function is called by each of the different ISR stubs.
     // The differentiation between different interrupts is done using the values inside the Registers struct that contains information pushed by us in the stubs
-
-    if (ISRHandlers[regs->interrupt] != nullptr)
+    printf((uint8_t*)"isr called");
+    if (ISRHandlers[regs->interrupt] != NULL)
         ISRHandlers[regs->interrupt](regs); // Call the interrupt based on the interrupt number inside Registers struct
 
     else printf((uint8_t*)"error");    

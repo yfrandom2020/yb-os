@@ -8,7 +8,7 @@ void Keyboard(Registers* state)
     // 2. Translate to ASCII
     // Forward to kernel buffers
     printf((uint8_t*)".");
-    PIC_sendEOI(state->interrupt - PIC1);
+    PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 
 void Timer(Registers* state)
@@ -18,7 +18,7 @@ void Timer(Registers* state)
 
 
     printf((uint8_t*)".");
-    PIC_sendEOI(state->interrupt - PIC1);
+    PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 
 void Populate_Irq_Entries()
@@ -34,6 +34,6 @@ void Populate_Irq_Entries()
 
     // We populate ISRHandlers with the irqs we defined
     printf((uint8_t*)"entered populate \n");
-    ISR_RegisterHandler(PIC1 + 0, Timer);
-    ISR_RegisterHandler(PIC1 + 1, Keyboard);
+    ISR_RegisterHandler(PIC1_BASE_IRQ, Timer);
+    ISR_RegisterHandler(PIC1_BASE_IRQ + 1, Keyboard);
 }
