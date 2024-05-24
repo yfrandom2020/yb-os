@@ -159,7 +159,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     
     enable_interrupts();
     
-    printf((uint8_t*)">");
+    printf((uint8_t*)">!");
     // Entering main kernel loop
     int8_t* user_data = nullptr;
     while(true)
