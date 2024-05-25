@@ -1,4 +1,4 @@
 Non immediate tasks
 1. make better printf - one that accepts multiple arguments
 2. Re-order project file tree - add an include directory with all header files  
-3. export to wsl
+3. Input buffering

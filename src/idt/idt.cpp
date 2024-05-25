@@ -16,7 +16,7 @@ extern "C" void idt_set_gate(int interrupt, void* base, uint16_t segment_descrip
     IDT[interrupt].offset_high = ((uint32_t)base >> 16) & 0xFFFF;
 }
 
-extern "C" void idt_initialize()
+extern "C" void IDT_Initialize()
 {
 
     // Loading the address and size of IDT to the idtr register using inline assembly

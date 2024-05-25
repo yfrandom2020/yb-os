@@ -3,9 +3,18 @@
 #include "pic.h"
 
 
+
+
 // This file will be the actual communication with the PIC - the programmable interrupt chip
 // The PIC is what connects the cpu to the hardware devices, for example the keyboard is connected with IRQ 1
 // https://wiki.osdev.org/8259_PIC
+
+
+Port8Bit pic1_command(PIC1_COMMAND);
+Port8Bit pic1_data(PIC1_DATA);
+
+Port8Bit pic2_command(PIC2_COMMAND);
+Port8Bit pic2_data(PIC2_DATA);
 
 uint8_t port_inb(uint8_t portnumber)
 {
@@ -21,7 +30,7 @@ void port_outb(uint16_t port, uint8_t data)
 }
 
 
-extern "C" void init_pic()
+extern "C" void Init_pic()
 {
     // Send initializing commands to the two PICs
 
@@ -29,19 +38,19 @@ extern "C" void init_pic()
     uint16_t ICW1_INIT = 0x10; // ICW - initialization command word
     uint16_t ICW4_8086 = 0x01;
 
-
+    
     // Initialize PIC1
-    port_outb(PIC1_COMMAND, ICW1_INIT | ICW4_8086);
-    port_outb(PIC1_DATA, PIC1_BASE_IRQ); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's idt offset starts with the number 0x20 which is 32. This is because the first 32 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
-    port_outb(PIC1_DATA, 0x04); // Tell PIC1 that there is a slave PIC at IRQ2 (0000 0100)
-    port_outb(PIC1_DATA, 0x01); // 8086 mode
+    pic1_command.Write((uint8_t)ICW1_INIT | ICW4_8086);
+    pic1_data.Write((uint8_t)PIC1_BASE_IRQ); // PIC1 base IRQ is 0x20 - this translates to telling the PIC that it's idt offset starts with the number 0x20 which is 32. This is because the first 32 (0 - 31) entries of the IVT are reserved for the compiler. They contain entries related to compiler errors and other things
+    pic1_data.Write((uint8_t)0x04); // Tell PIC1 that there is a slave PIC at IRQ2 (0000 0100)
+    pic1_data.Write((uint8_t)0x01); // 8086 mode
 
 
     // Initialize PIC2
-    port_outb(PIC2_COMMAND, ICW1_INIT | ICW4_8086);
-    port_outb(PIC2_DATA, PIC2_BASE_IRQ); // PIC2 base IRQ is 0x28
-    port_outb(PIC2_DATA, 0x02); // Tell PIC2 its cascade identity (0000 0010)
-    port_outb(PIC2_DATA, 0x01); // 8086 mode
+    pic2_command.Write((uint8_t)ICW1_INIT | ICW4_8086);
+    pic2_data.Write((uint8_t)PIC2_BASE_IRQ); // PIC2 base IRQ is 0x28
+    pic2_data.Write((uint8_t)0x02); // Tell PIC2 its cascade identity (0000 0010)
+    pic2_data.Write((uint8_t)0x01); // 8086 mode
 
 
     // Mask all interrupts
@@ -50,20 +59,19 @@ extern "C" void init_pic()
     // This is a convention process done at the initialization process
     // In order to prevent spurios IRQ the interrupts sent to the PIC's are disabled until the system is fully booted and only then are enabled
 
-    printf((uint8_t*)"ended init_pic \n");
 }
 
-void interrupt_flag()
+void enable_interrupt_flag()
 {
     asm volatile("sti");
 }
 
-extern "C" void enable_interrupts()
+extern "C" void Enable_interrupts()
 {
     // Unmask interrupts on PIC1 and PIC2
-    port_outb(PIC1_DATA, 0x00); // Unmask all interrupts on PIC1
-    port_outb(PIC2_DATA, 0x00); // Unmask all interrupts on PIC2
-    interrupt_flag();
+    pic1_data.Write((uint8_t)0x00); // Unmask all interrupts on PIC1
+    pic2_data.Write((uint8_t)0x00); // Unmask all interrupts on PIC2
+    enable_interrupt_flag();
     
 }
 
@@ -74,7 +82,7 @@ extern "C" void PIC_sendEOI(uint8_t irq)
     // If from master -> only to master
     // If from slave -> both master and slave
 	if(irq >= 8)
-		port_outb(PIC2_COMMAND,PIC_EOI);
-	port_outb(PIC1_COMMAND,PIC_EOI);
+		pic2_command.Write((uint8_t)PIC_EOI);
+	pic1_command.Write((uint8_t)PIC_EOI);
 }
 

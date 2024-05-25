@@ -1,13 +1,15 @@
 // In this file we will handle the hardware interrupts received from components such as keyboard and timer
 #include "irq.h"
+#include "../../../port/port.h"
 
+Port8Bit keyboard_port((uint8_t)0x60);
 void Keyboard(Registers* state)
 {
     // Keyboard isr  
     // 1. Read from the relevant port (0x60) the data of the keyboard
     // 2. Translate to ASCII
     // Forward to kernel buffers
-    uint8_t data = port_inb((uint8_t)0x60);
+    uint8_t data = keyboard_port.Read();
     printf((uint8_t*)data);
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
@@ -31,7 +33,6 @@ void Populate_Irq_Entries()
     // After pushing some values, the general purpose ISR_Handler is called with the state of teh registers as input (Registers* state)
 
     // We populate ISRHandlers with the irqs we defined
-    printf((uint8_t*)"entered populate \n");
     ISR_RegisterHandler(PIC1_BASE_IRQ, Timer);
     ISR_RegisterHandler(PIC1_BASE_IRQ + 1, Keyboard);
 }

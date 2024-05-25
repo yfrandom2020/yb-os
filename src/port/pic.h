@@ -19,7 +19,7 @@
 void printf(uint8_t* letter);
 uint8_t port_inb(uint8_t portnumber);
 void port_outb(uint16_t port, uint8_t data);
-extern "C" void init_pic();
-extern "C" void enable_interrupts();
+extern "C" void Init_pic();
+extern "C" void Enable_interrupts();
 extern "C" void PIC_sendEOI(uint8_t irq);
 void interrupt_flag();

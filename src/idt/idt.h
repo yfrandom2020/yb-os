@@ -35,7 +35,7 @@ typedef enum {
 } idt_flags;
 
 extern "C" void idt_set_gate(int interrupt, void* base, uint16_t segment_descriptor, uint8_t flags);
-extern "C" void idt_initialize();
+extern "C" void IDT_Initialize();
 extern "C" void set_flag(int interrupt);
 extern "C" void disable_flag(int interrupt);
 void idt_load_assembly(idt_descriptor* ptr);

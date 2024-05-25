@@ -5,6 +5,7 @@
 // Realistically, this os follows a monolythic kernel design so all processes are level 0
 /*--------------------------------------------------------------------------------------------------------------------*/
 #include "kernel.h"
+#include "initializers.h"
 #include <stddef.h>
 
 int8_t command_buffer[KEYBOARD_BUFFER_SIZE]; // This buffer will contain the data from the keyboard - each time a data is inputted to the keyboard_buffer it will also be inputted into the command buffer. In case of line feed we will check the data stored in the command buffer
@@ -133,49 +134,13 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
-    printf((uint8_t*)"Hello World! \n");
     
+    initializers();
     
     int8_t first_command[10] = "ben dover";
     commands[0] = first_command;
 
-    // Completing a few steps before entering the main kernel loop
-    // 1) Initialize the PIC
-    // 2) Initialize the IDT
-    // 3) Connect the drivers
-    // 4) Re - enable interrupts
 
-
-
-    initialize_buffers();
-
-    printf((uint8_t*)"buffesr initialized \n");
-    
-    GDT_Initialize(); 
-
-    printf((uint8_t*)"gdt initialized \n");
-
-    idt_initialize(); // Loading the idt into idtr - the array exists
-
-    printf((uint8_t*)"idt initialized \n");
-
-    ISR_Initialize();
-
-    printf((uint8_t*)"isr initialized \n");
-
-    Populate_Irq_Entries(); // Filling in the ISRHandlers array
-
-    printf((uint8_t*)"irq initialized \n");
-
-    init_pic(); // Init_pic also masks all interrups
-
-    printf((uint8_t*)"pic initialized \n");
-    
-    enable_interrupts();
-    
-    printf((uint8_t*)"interrupts initialized \n");
-
-    printf((uint8_t*)">!!!!):");
     // Entering main kernel loop
     int8_t* user_data = nullptr;
 
