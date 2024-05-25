@@ -163,13 +163,13 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     printf((uint8_t*)"isr initialized \n");
 
-    init_pic(); // Init_pic also masks all interrups
-
-    printf((uint8_t*)"pic initialized \n");
-
     Populate_Irq_Entries(); // Filling in the ISRHandlers array
 
     printf((uint8_t*)"irq initialized \n");
+
+    init_pic(); // Init_pic also masks all interrups
+
+    printf((uint8_t*)"pic initialized \n");
     
     enable_interrupts();
     
