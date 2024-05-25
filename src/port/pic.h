@@ -17,8 +17,9 @@
 
 
 void printf(uint8_t* letter);
-static inline uint8_t inb(uint8_t portnumber);
-static inline void outb(uint16_t port, uint8_t data);
+uint8_t port_inb(uint8_t portnumber);
+void port_outb(uint16_t port, uint8_t data);
 extern "C" void init_pic();
 extern "C" void enable_interrupts();
 extern "C" void PIC_sendEOI(uint8_t irq);
+void interrupt_flag();

@@ -151,7 +151,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     printf((uint8_t*)"buffesr initialized \n");
     
-    GlobalDescriptorTable gdt; 
+    GDT_Initialize(); 
 
     printf((uint8_t*)"gdt initialized \n");
 
@@ -183,7 +183,6 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     {
         continue;
     }
-    
     
 }
 

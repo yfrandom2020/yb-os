@@ -7,7 +7,8 @@ void Keyboard(Registers* state)
     // 1. Read from the relevant port (0x60) the data of the keyboard
     // 2. Translate to ASCII
     // Forward to kernel buffers
-    printf((uint8_t*)".");
+    uint8_t data = port_inb((uint8_t)0x60);
+    printf((uint8_t*)data);
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 
@@ -15,9 +16,6 @@ void Timer(Registers* state)
 {
     // The timer interrupt is an interrupt sent by the timer in set intervals
     // There isn't much to implement since we aren't implemeting context switching
-
-
-    printf((uint8_t*)".");
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 

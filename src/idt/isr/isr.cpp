@@ -69,7 +69,6 @@ extern "C" void __attribute__((cdecl)) ISR_Handler(Registers* regs)
     // This is a general purpose ISR handler
     // This function is called by each of the different ISR stubs.
     // The differentiation between different interrupts is done using the values inside the Registers struct that contains information pushed by us in the stubs
-    printf((uint8_t*)"isr called");
     if (ISRHandlers[regs->interrupt] != NULL)
         ISRHandlers[regs->interrupt](regs); // Call the interrupt based on the interrupt number inside Registers struct
 
