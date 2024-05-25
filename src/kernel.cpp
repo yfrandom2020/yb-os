@@ -155,7 +155,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     printf((uint8_t*)"gdt initialized \n");
 
-    idt_initialize(); // loading the idt into idtr - the array exists
+    idt_initialize(); // Loading the idt into idtr - the array exists
 
     printf((uint8_t*)"idt initialized \n");
 
@@ -163,7 +163,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 
     printf((uint8_t*)"isr initialized \n");
 
-    init_pic(); // init_pic also masks all interrups
+    init_pic(); // Init_pic also masks all interrups
 
     printf((uint8_t*)"pic initialized \n");
 

@@ -26,17 +26,17 @@ ISR\num\():
 isr_common:
     pusha               # Save all the values in the registers - pushes in order eax, ecx, edx, ebx, esp, ebp, esi, edi
 
-    xor %eax, %eax      # clear eax for segment operations
-    mov %ax, %ds        # clear ds
-    pushl %eax          # saving only the state of data segment register
+    xor %eax, %eax      # Clear eax for segment operations
+    mov %ax, %ds        # Clear ds
+    pushl %eax          # Saving only the state of data segment register
 
-    mov $0x10, %ax      # use kernel data segment
+    mov $0x10, %ax      # Use kernel data segment
     mov %ax, %ds
     mov %ax, %es
     mov %ax, %fs
     mov %ax, %gs
 
-    pushl %esp          # pass pointer to stack to C, so we can access all the pushed information
+    pushl %esp          # Pass pointer to stack to C, so we can access all the pushed information
 
     # CURRENT STATE OF STACK BEFORE PUSHING
     # (STACK GROWING DOWNWARDS)
@@ -44,7 +44,7 @@ isr_common:
     # Therefore esp has the lowest value and eax has the highest value
 
     call ISR_Handler
-    add $4, %esp        # adjust stack pointer after ISR_Handler call
+    add $4, %esp        # adjust stack pointer after ISR_Handler call - stack works in word size
 
     pop %eax            # restore old segment register values
     mov %ax, %ds

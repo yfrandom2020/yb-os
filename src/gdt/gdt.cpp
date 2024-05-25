@@ -22,7 +22,7 @@ dataSegmentSelector(0,64*1024*1024, 0x92)
 
     asm volatile("lgdt (%0)": : "p" (((uint8_t *) i)+2)); // Loading into the gdtr using inline assembly, pointer to the gdt object that was created
 
-    printf((uint8_t*)"initialized table");
+    printf((uint8_t*)"initialized table \n");
 }
 
 GlobalDescriptorTable::~GlobalDescriptorTable()
