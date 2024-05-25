@@ -1,8 +1,8 @@
 // This is a simple code file that declares the function stub for each different isr - there are 256
 // This file also implements a function that enables the gate of each of them
-#include "../idt.h"
-#include "../../gdt/gdt.h"
-#include "isrgen.h"
+#include "idt/idt.h"
+#include "gdt/gdt.h"
+#include "idt/isr/isrgen.h"
 
 void ISR_InitializeGates()
 {

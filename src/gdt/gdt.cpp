@@ -100,8 +100,8 @@
 //     return result;
 // }
 
-#include "gdt.h"
-#include "../types.h"
+#include "gdt/gdt.h"
+#include "types.h"
 
 typedef struct
 {

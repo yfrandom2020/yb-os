@@ -1,6 +1,6 @@
 // In this file we will handle the hardware interrupts received from components such as keyboard and timer
-#include "irq.h"
-#include "../../../port/port.h"
+#include "idt/isr/irq/irq.h"
+#include "port/port.h"
 
 Port8Bit keyboard_port((uint8_t)0x60);
 void Keyboard(Registers* state)

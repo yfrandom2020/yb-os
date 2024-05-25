@@ -1,4 +1,4 @@
-#include "idt.h"
+#include "idt/idt.h"
 // Apparently the weird structure of the table (also in GDT) is caused because of the need of backwards compatability that messes things up
 
 idt_entry IDT[256]; // The actual IDT table - an array sized 256 with each element being an idt_entry struct

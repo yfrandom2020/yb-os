@@ -1,6 +1,6 @@
-#include "port.h"
-#include "../types.h"
-#include "pic.h"
+#include "port/port.h"
+#include "types.h"
+#include "port/pic.h"
 
 
 

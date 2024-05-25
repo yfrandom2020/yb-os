@@ -6,7 +6,6 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 #include "kernel.h"
 #include "initializers.h"
-#include <stddef.h>
 
 int8_t command_buffer[KEYBOARD_BUFFER_SIZE]; // This buffer will contain the data from the keyboard - each time a data is inputted to the keyboard_buffer it will also be inputted into the command buffer. In case of line feed we will check the data stored in the command buffer
 int8_t keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // Initializing a keyboard buffer that will contain what is typed
