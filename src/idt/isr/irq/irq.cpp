@@ -3,6 +3,25 @@
 #include "port/port.h"
 
 Port8Bit keyboard_port((uint8_t)0x60);
+
+
+uint8_t scancode_to_ascii(uint8_t scancode) {
+    // Simple scan code to ASCII conversion table for alphanumeric keys
+    
+    static const char scancode_table[128] = {
+        0,  27, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b',  // 0x00 - 0x0F
+        '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n',   // 0x10 - 0x1C
+        0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', 0,       // 0x1D - 0x29
+        '\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', 0, '*', 0,       // 0x2A - 0x35
+        ' ', 0                                                                  // 0x36 - 0x37 (Space at 0x39)
+    };
+
+    if (scancode < 128) {
+        return scancode_table[scancode];
+    }
+    return 0;
+}
+
 void Keyboard(Registers* state)
 {
     // Keyboard isr  
@@ -10,7 +29,9 @@ void Keyboard(Registers* state)
     // 2. Translate to ASCII
     // Forward to kernel buffers
     uint8_t data = keyboard_port.Read();
-    printf((uint8_t*)data);
+    data = scancode_to_ascii(data);
+    char buffer[2] = {data, '\0'};
+    printf(buffer);
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 

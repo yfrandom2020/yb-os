@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef __cplusplus
-void printf(uint8_t* letter);
+void printf(const char* letter);
 extern "C" {
 #endif
 void __attribute((cdecl)) ISR0(); // Connect to the stubs defined in the assembly file - This is simply a declaration and the code within the function is filled by isr_asm.s

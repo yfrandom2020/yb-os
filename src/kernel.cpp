@@ -1,55 +1,147 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 // This is the main kernel file
 // This file is the main code that gets exectuted upon booting the os
-// The main function is kernelMain which will in turn call the other functions, such as IVT and PIC related function
+// The main function is kernelMain which will in turn call the other functions, such as IDT and PIC related function
 // Realistically, this os follows a monolythic kernel design so all processes are level 0
 /*--------------------------------------------------------------------------------------------------------------------*/
 #include "kernel.h"
 #include "initializers.h"
 
-int8_t command_buffer[KEYBOARD_BUFFER_SIZE]; // This buffer will contain the data from the keyboard - each time a data is inputted to the keyboard_buffer it will also be inputted into the command buffer. In case of line feed we will check the data stored in the command buffer
 int8_t keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // Initializing a keyboard buffer that will contain what is typed
 int32_t keyboard_buffer_index = 0;
 int8_t* commands[1] = {nullptr}; // An array where each element is a pointer to a char
+static uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
+static uint8_t x = 0, y = 0;
+static char command_buffer[MAX_COMMAND_LENGTH];
+static int command_length = 0;
 
 
-void printf(uint8_t* str)
-{
-    // This is a basic printf function - a subsitute for the original c++ function
-    // This function refers to a specific memory address in the RAM that prints its values to screen and writes the desired text there
-    // Char* str is a pointer to the address of the "Hello world!", so it contains something like 0x00a679
-    static uint16_t* VideoMemory = (uint16_t*) 0xb8000; // In the RAM, there are special addresses that when filled, print what's in them on the screen. These addresses start in 0xb800 and span for additional 80*25 bytes (the size of the screen)
-    static uint8_t x = 0, y = 0;
-    for (int32_t i = 0; str[i] != '\0'; ++i)
-    {
-        switch(str[i])
-        {
-            case '\n': // New line
-                y++;
-                x = 0;
-                //VideoMemory[80*y + x] = (VideoMemory[80*y + x]&0xFF00) | (int32_t)">";
-                break;
-            default:
-                VideoMemory[80*y + x] = (VideoMemory[80*y + x]&0xFF00) | str[i];
-                x++;
-                break;
-        }
-        if (x >= 80)
-        {
-            y++; // Next line
-            x = 0;
-        }
-        if (y >= 25)
-        {
-            // No more place on screen
-            for (y = 0; y < 25; y++)
-                for (x = 0; x < 80; x++)
-                    VideoMemory[80*y + x] = (VideoMemory[80*y + x]&0xFF00) | ' '; // Clear screen
-            x = 0;
-            y = 0;
+
+void clear_screen() {
+    // QEMU prints some text to screen about boot device
+    // Before doing any actions, clear screen
+    for (int y = 0; y < SCREEN_HEIGHT; y++) {
+        for (int x = 0; x < SCREEN_WIDTH; x++) {
+            VideoMemory[y * SCREEN_WIDTH + x] = (WHITE_ON_BLACK << 8) | ' ';
         }
     }
+    // Reset cursor position
+    x = 0;
+    y = 0;
+    putchar('>');  // Add '>' at the beginning of a new line
 }
+
+
+void help_command() 
+{
+    printf("Help \n");
+    putchar('>');  // Add '>' at the beginning of a new line
+}
+
+void unknown_command() 
+{
+    printf("Error \n");
+    putchar('>');  // Add '>' at the beginning of a new line
+}
+
+int strcmp(const char *str1, const char *str2) {
+    while (*str1 && (*str1 == *str2)) {
+        str1++;
+        str2++;
+    }
+    return *(unsigned char *)str1 - *(unsigned char *)str2;
+}
+
+
+
+const command_t all_commands[MAX_COMMANDS] = 
+{
+    {"clear", clear_screen},
+    {"hello", help_command},
+    // Add more commands here
+    {"unknown", unknown_command}
+};
+
+
+void execute_command() {
+    command_buffer[command_length] = '\0'; // Null-terminate the command
+    int found = 0;
+
+    for (int i = 0; i < MAX_COMMANDS; i++) {
+        if (strcmp(command_buffer, all_commands[i].name) == 0) 
+        {
+            all_commands[i].func();
+            found = 1;
+            break;
+        }
+    }
+
+    if (!found) {
+        unknown_command();
+    }
+
+    // Clear the command buffer
+    command_length = 0;
+}
+
+
+void scroll() 
+{
+    // Instead of clearing the entire terminal we shift everything one line down
+    for (int i = 0; i < SCREEN_HEIGHT - 1; i++) {
+        for (int j = 0; j < SCREEN_WIDTH; j++) {
+            VideoMemory[i * SCREEN_WIDTH + j] = VideoMemory[(i + 1) * SCREEN_WIDTH + j];
+        }
+    }
+    for (int j = 0; j < SCREEN_WIDTH; j++) {
+        VideoMemory[(SCREEN_HEIGHT - 1) * SCREEN_WIDTH + j] = (WHITE_ON_BLACK << 8) | ' ';
+    }
+    y = SCREEN_HEIGHT - 1;
+    x = 0;
+}
+
+
+void putchar(char c) 
+{
+    // Print a single character to screen
+    // Using static variables x and y to determine position in the video memory
+    switch (c) {
+        case '\n':
+            execute_command();
+            x = 0;
+            y++;
+            if (y >= SCREEN_HEIGHT) {
+                scroll();
+            }
+            break;
+        default:
+            command_buffer[command_length++] = c;
+            VideoMemory[y * SCREEN_WIDTH + x] = (WHITE_ON_BLACK << 8) | c;
+            x++;
+            break;
+    }
+
+    if (x >= SCREEN_WIDTH) {
+        x = 0;
+        y++;
+    }
+    if (y >= SCREEN_HEIGHT) {
+        scroll();
+    }
+}
+
+// Basic printf function to print a string
+void printf(const char* str) 
+{
+    // Use putcher to iterate over string a print it
+    // Future - add support of variables %d, %s
+    for (int i = 0; str[i] != '\0'; i++) {
+        putchar(str[i]);
+    }
+}
+
+
+
 
 
 void initialize_buffers()
@@ -105,7 +197,6 @@ void fill_keyboard_buffer(uint8_t letter)
     // This function will be called by the ISR when the input happens
     command_buffer[index] = letter;
     // Enter means that the current data that was typed will be inputted as a command to the kernel. In this case we will first reset the buffer and then execute the command
-    printf(&letter);
     keyboard_buffer[index] = letter;
     if (index < 127)
     {
@@ -129,16 +220,19 @@ extern "C" void callConstructors()
 }
 
 
+
 extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
     
+    clear_screen();
     initializers();
     
     int8_t first_command[10] = "ben dover";
     commands[0] = first_command;
 
+    printf(">");
 
     // Entering main kernel loop
     int8_t* user_data = nullptr;

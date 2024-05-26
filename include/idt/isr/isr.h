@@ -6,13 +6,13 @@
 // Therefore we will have a small assembly stub that pushes specific values and then calls a general ISR handling function (aka ISR_Handler)
 #pragma once
 
-#include "../../types.h"
-#include "../idt.h"
-#include "../../gdt/gdt.h"
-#include "isrgen.h"
+#include "types.h"
+#include "idt/idt.h"
+#include "gdt/gdt.h"
+#include "idt/isr/isrgen.h"
 #include <stddef.h>
 
-void printf(uint8_t* ptr);
+void printf(const char* ptr);
 
 typedef struct
 {

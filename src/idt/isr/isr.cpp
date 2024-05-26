@@ -41,23 +41,19 @@ static const char* const Exceptions[] = { // The first 32 entries in the IDT are
 
 extern "C" void ISR_Initialize()
 {
-    printf((uint8_t*)"entered ISR initialize \n");
     
     ISR_InitializeGates(); 
     // For each of the entries in the IDT: Set it up by calling the idt_set_gate and passing the base address of the ISR, as well as general parameters
-    printf((uint8_t*)"Continuing execution \n");
     for (int i = 0; i < 256; i++)
         set_flag(i); // Also enable the flag
 
     disable_flag(0x80); // Test
-    printf((uint8_t*)"finished execution \n");
 }
 
 void ISR_RegisterHandler(int interrupt, ISRHandler handler)
 {
     // Fill a single entry in the idt with the isr code
     // ISRHandler - a type defined in the header file - a pointer to a void function
-    printf((uint8_t*)"entered resigster_handler \n");
     ISRHandlers[interrupt] = handler;
     set_flag(interrupt);
 }
@@ -72,7 +68,7 @@ extern "C" void __attribute__((cdecl)) ISR_Handler(Registers* regs)
     if (ISRHandlers[regs->interrupt] != NULL)
         ISRHandlers[regs->interrupt](regs); // Call the interrupt based on the interrupt number inside Registers struct
 
-    else printf((uint8_t*)"error");    
+    else printf("error");    
 
     // else if (regs->interrupt >= 32)
     //     printf((uint8_t*)"Unhandled interrupt %d!\n", regs->interrupt);

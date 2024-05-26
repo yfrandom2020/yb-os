@@ -34,7 +34,6 @@ extern "C" void Init_pic()
 {
     // Send initializing commands to the two PICs
 
-    printf((uint8_t*)"entered init_pic \n");
     uint16_t ICW1_INIT = 0x10; // ICW - initialization command word
     uint16_t ICW4_8086 = 0x01;
 

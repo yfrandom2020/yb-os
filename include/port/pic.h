@@ -16,7 +16,7 @@
 #define PIC2_BASE_IRQ           PIC1_BASE_IRQ + 8
 
 
-void printf(uint8_t* letter);
+void printf(const char* letter);
 uint8_t port_inb(uint8_t portnumber);
 void port_outb(uint16_t port, uint8_t data);
 extern "C" void Init_pic();
