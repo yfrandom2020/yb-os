@@ -7,17 +7,10 @@
 #include "kernel.h"
 #include "initializers.h"
 
-int8_t keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // Initializing a keyboard buffer that will contain what is typed
-int32_t keyboard_buffer_index = 0;
 int8_t* commands[1] = {nullptr}; // An array where each element is a pointer to a char
-static uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
-static uint8_t x = 0, y = 0;
-static char command_buffer[MAX_COMMAND_LENGTH];
-static int command_length = 0;
 
-
-
-void clear_screen() {
+void clear_screen() 
+{
     // QEMU prints some text to screen about boot device
     // Before doing any actions, clear screen
     for (int y = 0; y < SCREEN_HEIGHT; y++) {
@@ -44,148 +37,7 @@ void unknown_command()
     putchar('>');  // Add '>' at the beginning of a new line
 }
 
-int strcmp(const char *str1, const char *str2) {
-    while (*str1 && (*str1 == *str2)) {
-        str1++;
-        str2++;
-    }
-    return *(unsigned char *)str1 - *(unsigned char *)str2;
-}
 
-
-
-const command_t all_commands[MAX_COMMANDS] = 
-{
-    {"clear", clear_screen},
-    {"hello", help_command},
-    // Add more commands here
-    {"unknown", unknown_command}
-};
-
-
-void execute_command() {
-    command_buffer[command_length] = '\0'; // Null-terminate the command
-    int found = 0;
-
-    for (int i = 0; i < MAX_COMMANDS; i++) {
-        if (strcmp(command_buffer, all_commands[i].name) == 0) 
-        {
-            all_commands[i].func();
-            found = 1;
-            break;
-        }
-    }
-
-    if (!found) {
-        unknown_command();
-    }
-
-    // Clear the command buffer
-    command_length = 0;
-}
-
-
-void scroll() 
-{
-    // Instead of clearing the entire terminal we shift everything one line down
-    for (int i = 0; i < SCREEN_HEIGHT - 1; i++) {
-        for (int j = 0; j < SCREEN_WIDTH; j++) {
-            VideoMemory[i * SCREEN_WIDTH + j] = VideoMemory[(i + 1) * SCREEN_WIDTH + j];
-        }
-    }
-    for (int j = 0; j < SCREEN_WIDTH; j++) {
-        VideoMemory[(SCREEN_HEIGHT - 1) * SCREEN_WIDTH + j] = (WHITE_ON_BLACK << 8) | ' ';
-    }
-    y = SCREEN_HEIGHT - 1;
-    x = 0;
-}
-
-
-void putchar(char c) 
-{
-    // Print a single character to screen
-    // Using static variables x and y to determine position in the video memory
-    switch (c) {
-        case '\n':
-            execute_command();
-            x = 0;
-            y++;
-            if (y >= SCREEN_HEIGHT) {
-                scroll();
-            }
-            break;
-        default:
-            command_buffer[command_length++] = c;
-            VideoMemory[y * SCREEN_WIDTH + x] = (WHITE_ON_BLACK << 8) | c;
-            x++;
-            break;
-    }
-
-    if (x >= SCREEN_WIDTH) {
-        x = 0;
-        y++;
-    }
-    if (y >= SCREEN_HEIGHT) {
-        scroll();
-    }
-}
-
-// Basic printf function to print a string
-void printf(const char* str) 
-{
-    // Use putcher to iterate over string a print it
-    // Future - add support of variables %d, %s
-    for (int i = 0; str[i] != '\0'; i++) {
-        putchar(str[i]);
-    }
-}
-
-
-
-
-
-void initialize_buffers()
-{
-    // Set the keyboard and command buffer to zero
-    for (int32_t i = 0; i < 128; i++)
-    {
-        keyboard_buffer[i] = '\0';
-        command_buffer[i] = '\0';
-    }
-}
-
-
-// int8_t* check_buffer_status()
-// {
-//     // This function will be used by the kernel main loop to check for new input
-//     // This function keeps track of the keyboard buffer index and checks with it for updates
-//     bool flag = false;
-//     int32_t index = -1; // Save the index of the \n character
-//     // First search the command buffer for \n.
-//     // If found, there is a command to be executed we will extract it from the command buffer and then re initialize it
-//     // Else, return false
-//     for (int32_t i = 0; i < 128 && !flag; i++)
-//     {
-//         if (command_buffer[i] = '\n')
-//         {
-//              flag = true;
-//              index = i;
-//         }
-//     }
-//     if (flag)
-//     {
-//         int8_t arr[index];
-//         for (int8_t j = 0; j < index; j++)
-//         {
-//             arr[j] = command_buffer[j];
-//         }
-//         return &arr[0];
-//     }
-//     else
-//     {
-//         return nullptr;
-//     }
-// }
 
 
 // Extern "C" means that when compiling the source code, the name of the function will not be changed by the compiler
@@ -220,22 +72,18 @@ extern "C" void callConstructors()
 }
 
 
-
 extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
     
     clear_screen();
+    
     initializers();
     
-    int8_t first_command[10] = "ben dover";
-    commands[0] = first_command;
-
     printf(">");
 
     // Entering main kernel loop
-    int8_t* user_data = nullptr;
 
     while (true)
     {
