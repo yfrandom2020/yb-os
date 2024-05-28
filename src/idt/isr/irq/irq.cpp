@@ -31,7 +31,7 @@ void Keyboard(Registers* state)
     uint8_t data = keyboard_port.Read();
     data = scancode_to_ascii(data);
     char buffer[2] = {data, '\0'};
-    printf(buffer);
+    printf(buffer, 1); // print character
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 

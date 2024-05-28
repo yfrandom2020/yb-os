@@ -21,20 +21,20 @@ void clear_screen()
     // Reset cursor position
     x = 0;
     y = 0;
-    putchar('>');  // Add '>' at the beginning of a new line
+    printf(">", 0);  // Add '>' at the beginning of a new line
 }
 
 
 void help_command() 
 {
-    printf("Help \n");
-    putchar('>');  // Add '>' at the beginning of a new line
+    printf("hello \n", 0);
+    printf(">", 0);  // Add '>' at the beginning of a new line
 }
 
 void unknown_command() 
 {
-    printf("Error \n");
-    putchar('>');  // Add '>' at the beginning of a new line
+    printf("Error \n", 0);
+    printf(">", 0);  // Add '>' at the beginning of a new line
 }
 
 
@@ -81,7 +81,7 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     
     initializers();
     
-    printf(">");
+    printf(">",0);
 
     // Entering main kernel loop
 
