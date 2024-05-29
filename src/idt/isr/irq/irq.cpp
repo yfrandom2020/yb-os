@@ -1,6 +1,6 @@
 // In this file we will handle the hardware interrupts received from components such as keyboard and timer
-#include "idt/isr/irq/irq.h"
-#include "port/port.h"
+#include <idt/isr/irq/irq.h>
+#include <port/port.h>
 
 Port8Bit keyboard_port((uint8_t)0x60);
 
@@ -42,6 +42,16 @@ void Timer(Registers* state)
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 
+void Disk(Registers* state)
+{
+    // This ISR will handle the disk communication
+    // To communicate with the disk we first initialize it using port communication
+    
+
+    PIC_sendEOI(state->interrupt - PIC2); // finish ISR routine
+
+}
+
 void Populate_Irq_Entries()
 {
     // The ISRHandlers array in the isr.cpp contains an array of void pointers to the ISR themselves
@@ -56,4 +66,5 @@ void Populate_Irq_Entries()
     // We populate ISRHandlers with the irqs we defined
     ISR_RegisterHandler(PIC1_BASE_IRQ, Timer);
     ISR_RegisterHandler(PIC1_BASE_IRQ + 1, Keyboard);
+    ISR_RegisterHandler(PIC2_BASE_IRQ + 7, Disk); // Disk connected to IRQ 14 (or 15) depends if IDE is primary or secondary
 }

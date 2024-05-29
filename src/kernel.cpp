@@ -4,10 +4,8 @@
 // The main function is kernelMain which will in turn call the other functions, such as IDT and PIC related function
 // Realistically, this os follows a monolythic kernel design so all processes are level 0
 /*--------------------------------------------------------------------------------------------------------------------*/
-#include "kernel.h"
-#include "initializers.h"
-
-int8_t* commands[1] = {nullptr}; // An array where each element is a pointer to a char
+#include <kernel.h>
+#include <initializers.h>
 
 void clear_screen() 
 {
@@ -24,7 +22,6 @@ void clear_screen()
     printf(">", 0);  // Add '>' at the beginning of a new line
 }
 
-
 void help_command() 
 {
     printf("hello \n", 0);
@@ -36,9 +33,6 @@ void unknown_command()
     printf("Error \n", 0);
     printf(">", 0);  // Add '>' at the beginning of a new line
 }
-
-
-
 
 // Extern "C" means that when compiling the source code, the name of the function will not be changed by the compiler
 // This is done in order to call function from other files, and making sure that the names are saved
@@ -60,7 +54,6 @@ void fill_keyboard_buffer(uint8_t letter)
     }
 }
 
-
 // Conventions
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
@@ -71,7 +64,6 @@ extern "C" void callConstructors()
         (*i)();
 }
 
-
 extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     // This is the kernelMain function - the main function of the kernel and the os
@@ -80,15 +72,12 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     clear_screen();
     
     initializers();
-    
-    printf(">",0);
 
     // Entering main kernel loop
 
     while (true)
     {
         continue;
-    }
-    
+    } 
 }
 

@@ -12,13 +12,15 @@
 #define PIC2_COMMAND	PIC2 // Command port of the slave PIC
 #define PIC2_DATA	(PIC2+1) // Data port of the slave PIC
 #define PIC_EOI 	0x20		/* End-of-interrupt command code */
-#define PIC1_BASE_IRQ           32 // the first address of pic 1 in idt
+#define PIC1_BASE_IRQ           32 // the first address of pic 1 in idt. PIC1 is mapped to interrupts 32 - 39 + PIC2 is mapped to interrupt 40 - 47 
 #define PIC2_BASE_IRQ           PIC1_BASE_IRQ + 8
 
 
 void printf(const char* letter);
 uint8_t port_inb(uint8_t portnumber);
 void port_outb(uint16_t port, uint8_t data);
+inline void port_insw(uint16_t port, void* addr, int count);
+inline void port_outsw(uint16_t port, const void* addr, int count);
 extern "C" void Init_pic();
 extern "C" void Enable_interrupts();
 extern "C" void PIC_sendEOI(uint8_t irq);

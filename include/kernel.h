@@ -1,6 +1,7 @@
-#pragma once
+// Kernel header
 // The kernel header will include all the other header files
 // Therefore, when creating header files of new tasks it is only needed to include the kernel.h file
+#pragma once
 #include "types.h"
 #include "gdt/gdt.h"
 #include "port/port.h"
@@ -11,7 +12,7 @@
 #include "idt/isr/isrgen.h"
 
 #define KEYBOARD_BUFFER_SIZE 128
-#define VIDEO_MEMORY_ADDRESS 0xb8000
+#define VIDEO_MEMORY_ADDRESS 0xb8000 // Special address in RAM that when written to prints on screen
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
 #define WHITE_ON_BLACK 0x0F
@@ -154,7 +155,9 @@ void putchar(char c, int flag)
 // Basic printf function to print a string
 void printf(const char* str, int flag) 
 {
-    // Use putcher to iterate over string a print it
+    // Flag is a general parameter that indicates if call is from user or from kernel
+    // If from use (1) we activate the keyboard buffer and invoke the commands list
+    // Else pass
     // Future - add support of variables %d, %s
     for (int i = 0; str[i] != '\0'; i++) {
         putchar(str[i], flag);
