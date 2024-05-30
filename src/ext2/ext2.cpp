@@ -8,10 +8,10 @@ void init_superblock(superblock *sb, uint32_t total_blocks, uint32_t total_inode
     sb->total_blocks = total_blocks;
     sb->free_blocks = total_blocks - 1; // 1 block reserved for superblock
     sb->free_inodes = total_inodes - 1; // 1 inode reserved for root directory
-    sb->block_size = BLOCK_SIZE;
-    sb->inode_size = INODE_SIZE;
-    sb->blocks_per_group = BLOCKS_PER_GROUP;
-    sb->inodes_per_group = INODES_PER_GROUP;
+    //sb->block_size = BLOCK_SIZE;
+    //sb->inode_size = INODE_SIZE;
+    //sb->blocks_per_group = BLOCKS_PER_GROUP;
+    //sb->inodes_per_group = INODES_PER_GROUP;
 }
 
 
@@ -19,16 +19,16 @@ void init_superblock(superblock *sb, uint32_t total_blocks, uint32_t total_inode
 void init_inode(inode *in, uint16_t mode, uint16_t uid, uint32_t size) 
 {
     in->mode = mode;
-    in->uid = uid;
+    //in->uid = uid;
     in->size = size;
-    in->atime = 0;
-    in->ctime = 0;
-    in->mtime = 0;
-    in->dtime = 0;
-    in->gid = 0;
-    in->links_count = 1;
-    in->blocks = (size + BLOCK_SIZE - 1) / BLOCK_SIZE; // Number of 1024-byte blocks needed
-    in->flags = 0;
+    //in->atime = 0;
+    //in->ctime = 0;
+    //in->mtime = 0;
+    //in->dtime = 0;
+    //in->gid = 0;
+    //in->links_count = 1;
+    //in->blocks = (size + BLOCK_SIZE - 1) / BLOCK_SIZE; // Number of 1024-byte blocks needed
+    //in->flags = 0;
     memset(in->block, 0, sizeof(in->block));
 }
 

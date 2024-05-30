@@ -9,12 +9,12 @@
 
 
 #define BLOCK_SIZE 1024 // Block size 1024 bytes which is 1kb
-#define INODE_SIZE 128 // Size of node is 128 bytes - which is 0.125 kb
+#define INODE_SIZE 128 // Size of node is 128 bytes - which is also 0.125 kb
 #define SUPERBLOCK_SIZE 1024 // Size of superblock is same as other blocks
-#define BLOCKS_PER_GROUP 8192
+#define BLOCKS_PER_GROUP 8192 
 #define INODES_PER_GROUP 1024
 #define NUM_INODES 1024
-// Superblock structure
+#define SECTOR_SIZE 512 // A sector in the hard disk is 512 bytes long
 
 // Superblock structure
 typedef struct  
@@ -24,7 +24,7 @@ typedef struct
     uint32_t free_blocks;
     uint32_t free_inodes;
     char padding[BLOCK_SIZE - 4 * sizeof(uint32_t)];
-}__attribute__((packed)) superblock;
+} __attribute__((packed)) superblock;
 
 // Inode structure
 typedef struct 
