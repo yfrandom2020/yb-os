@@ -19,8 +19,8 @@
 void printf(const char* letter);
 uint8_t port_inb(uint8_t portnumber);
 void port_outb(uint16_t port, uint8_t data);
-inline void port_insw(uint16_t port, void* addr, int count);
-inline void port_outsw(uint16_t port, const void* addr, int count);
+void port_insw(uint16_t port, void* addr, int count);
+void port_outsw(uint16_t port, void* addr, int count);
 extern "C" void Init_pic();
 extern "C" void Enable_interrupts();
 extern "C" void PIC_sendEOI(uint8_t irq);

@@ -10,6 +10,8 @@
 #include "idt/util.h"
 #include "idt/isr/isr.h"
 #include "idt/isr/isrgen.h"
+#include "ext2/disk.h"
+#include "ext2/ext2.h"
 
 #define KEYBOARD_BUFFER_SIZE 128
 #define VIDEO_MEMORY_ADDRESS 0xb8000 // Special address in RAM that when written to prints on screen

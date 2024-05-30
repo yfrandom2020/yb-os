@@ -21,4 +21,6 @@ void initializers()
     Init_pic(); // Init_pic also masks all interrups
 
     Enable_interrupts();
+
+    ata_initialize(); // Initialize disk
 }

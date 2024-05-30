@@ -29,14 +29,14 @@ void port_outb(uint16_t port, uint8_t data)
      __asm__ volatile("outb %0, %1" : : "a" (data), "Nd" (port));
 }
 
-inline void port_insw(uint16_t port, void* addr, int count) 
+void port_insw(uint16_t port, void* addr, int count) 
 {
-    __asm__ volatile ("rep insw" : "+D"(addr), "+c"(count) : "d"(port) : "memory");
+    __asm__ volatile("rep insw" : "+D"(addr), "+c"(count) : "d"(port) : "memory");
 }
 
-inline void port_outsw(uint16_t port, const void* addr, int count) 
+void port_outsw(uint16_t port, void* addr, int count) 
 {
-    __asm__ volatile ("rep outsw" : "+S"(addr), "+c"(count) : "d"(port));
+    __asm__ volatile("rep outsw" : "+S"(addr), "+c"(count) : "d"(port));
 }
 
 

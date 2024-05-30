@@ -8,3 +8,4 @@ extern "C" void ISR_Initialize();
 void Populate_Irq_Entries();
 extern "C" void Init_pic();
 extern "C" void Enable_interrupts();
+void ata_initialize();
