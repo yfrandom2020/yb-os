@@ -1,56 +1,49 @@
 #pragma once
 #include <types.h>
-#define EXT2_SUPER_MAGIC 0xEF53
+#include <ext2/disk.h>
+#include <stddef.h>
+
+// The file system will follow a similar design to the ext2
+// This will be a simplified version of the ext2, something similar to: gvahim os chapter 10 - file system 
+// The os is booted from cdrom but the file system will be on hard drive
+
+
+#define BLOCK_SIZE 1024 // Block size 1024 bytes which is 1kb
+#define INODE_SIZE 128 // Size of node is 128 bytes - which is 0.125 kb
+#define SUPERBLOCK_SIZE 1024 // Size of superblock is same as other blocks
+#define BLOCKS_PER_GROUP 8192
+#define INODES_PER_GROUP 1024
+#define NUM_INODES 1024
+// Superblock structure
 
 // Superblock structure
-typedef struct {
-    uint32_t s_inodes_count;
-    uint32_t s_blocks_count;
-    uint32_t s_r_blocks_count;
-    uint32_t s_free_blocks_count;
-    uint32_t s_free_inodes_count;
-    uint32_t s_first_data_block;
-    uint32_t s_log_block_size;
-    uint32_t s_log_frag_size;
-    uint32_t s_blocks_per_group;
-    uint32_t s_frags_per_group;
-    uint32_t s_inodes_per_group;
-    uint32_t s_mtime;
-    uint32_t s_wtime;
-    uint16_t s_mnt_count;
-    uint16_t s_max_mnt_count;
-    uint16_t s_magic;
-    uint16_t s_state;
-    uint16_t s_errors;
-    uint16_t s_minor_rev_level;
-    uint32_t s_lastcheck;
-    uint32_t s_checkinterval;
-    uint32_t s_creator_os;
-    uint32_t s_rev_level;
-    uint16_t s_def_resuid;
-    uint16_t s_def_resgid;
-    // Other fields are omitted for brevity
-} ext2_superblock_t;
+typedef struct  
+{
+    uint32_t total_blocks;
+    uint32_t total_inodes;
+    uint32_t free_blocks;
+    uint32_t free_inodes;
+    char padding[BLOCK_SIZE - 4 * sizeof(uint32_t)];
+}__attribute__((packed)) superblock;
 
 // Inode structure
-typedef struct {
-    uint16_t i_mode;
-    uint16_t i_uid;
-    uint32_t i_size;
-    uint32_t i_atime;
-    uint32_t i_ctime;
-    uint32_t i_mtime;
-    uint32_t i_dtime;
-    uint16_t i_gid;
-    uint16_t i_links_count;
-    uint32_t i_blocks;
-    uint32_t i_flags;
-    uint32_t i_osd1;
-    uint32_t i_block[15];
-    uint32_t i_generation;
-    uint32_t i_file_acl;
-    uint32_t i_dir_acl;
-    uint32_t i_faddr;
-    uint8_t  i_osd2[12];
-} ext2_inode_t;
+typedef struct 
+{
+    uint16_t mode;
+    uint32_t size;
+    uint32_t block[15];
+    char padding[INODE_SIZE - sizeof(uint16_t) - sizeof(uint32_t) - 15 * sizeof(uint32_t)];
+} __attribute__((packed)) inode; 
 
+// File system structure
+typedef struct 
+{
+    superblock sb;
+    inode inodes[NUM_INODES];
+    uint8_t data_blocks[NUM_INODES * 10][BLOCK_SIZE]; // Example size for data blocks
+} __attribute__((packed)) file_system;
+
+void *memset(void *ptr, int value, size_t num);
+void init_superblock(superblock *sb, uint32_t total_blocks, uint32_t total_inodes);
+void init_inode(inode *in, uint16_t mode, uint16_t uid, uint32_t size);
+void Init_ext();

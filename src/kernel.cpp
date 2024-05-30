@@ -34,6 +34,19 @@ void unknown_command()
     printf(">", 0);  // Add '>' at the beginning of a new line
 }
 
+void *memset(void *ptr, int value, size_t num) 
+{
+    unsigned char *p = (unsigned char *)ptr;
+    unsigned char v = (unsigned char)value;
+
+    for (size_t i = 0; i < num; i++) {
+        *p++ = v;
+    }
+
+    return ptr;
+}
+
+
 // Extern "C" means that when compiling the source code, the name of the function will not be changed by the compiler
 // This is done in order to call function from other files, and making sure that the names are saved
 void fill_keyboard_buffer(uint8_t letter)

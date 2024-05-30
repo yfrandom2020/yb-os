@@ -3,7 +3,7 @@
 #include <port/port.h>
 
 Port8Bit keyboard_port((uint8_t)0x60);
-
+extern uint64_t up_time;
 
 uint8_t scancode_to_ascii(uint8_t scancode) {
     // Simple scan code to ASCII conversion table for alphanumeric keys
@@ -39,6 +39,7 @@ void Timer(Registers* state)
 {
     // The timer interrupt is an interrupt sent by the timer in set intervals
     // There isn't much to implement since we aren't implemeting context switching
+    up_time++;
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 

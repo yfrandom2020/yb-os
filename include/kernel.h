@@ -21,6 +21,7 @@
 #define MAX_COMMAND_LENGTH 128
 #define MAX_COMMANDS 10
 
+extern uint64_t up_time = 0;
 typedef void (*command_func_t)(void); // pointer to a void function that takes no arguments
 
 uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
@@ -166,5 +167,7 @@ void printf(const char* str, int flag)
     }
 }
 
+// util - replace the stdlib memset function
+void *memset(void *ptr, int value, size_t num);
 
 

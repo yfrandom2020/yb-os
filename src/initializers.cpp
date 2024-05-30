@@ -7,6 +7,7 @@ void initializers()
     // 2) Initialize the IDT
     // 3) Connect the drivers
     // 4) Re - enable interrupts
+    // 5) Initialize the disk
 
     initialize_buffers();
     
@@ -23,4 +24,6 @@ void initializers()
     Enable_interrupts();
 
     ata_initialize(); // Initialize disk
+
+    Init_ext();
 }
