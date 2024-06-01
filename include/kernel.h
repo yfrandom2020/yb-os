@@ -36,7 +36,7 @@ int32_t keyboard_buffer_index = 0;
 void clear_screen();
 void help_command();
 void unknown_command();
-void printf(const char* ptr, int flag);
+void printf(uint8_t* ptr, int flag);
 void Populate_Irq_Entries();
 
 typedef struct 
@@ -156,7 +156,7 @@ void putchar(char c, int flag)
 }
 
 // Basic printf function to print a string
-void printf(const char* str, int flag) 
+void printf(uint8_t* str, int flag) 
 {
     // Flag is a general parameter that indicates if call is from user or from kernel
     // If from use (1) we activate the keyboard buffer and invoke the commands list

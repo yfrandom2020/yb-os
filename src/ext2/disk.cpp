@@ -8,6 +8,7 @@ void ata_initialize()
     // Initialize both primary and secondary ATA buses, master and slave
     port_outb(0x1F6, 0xA0); // Select master drive on primary bus
     // You can add additional initialization for slave or secondary if needed
+    printf((uint8_t*)" exiting initlize",0);
 }
 
 void ata_wait_bsy() 
@@ -22,6 +23,7 @@ void ata_wait_drq()
 
 void ata_read_sector(uint32_t lba, uint8_t* buffer) 
 {
+    printf((uint8_t*)"in ata read sector \n",0);
     // Read from a specified location
     ata_wait_bsy();
     port_outb(ATA_PRIMARY_DRIVE, 0xE0 | ((lba >> 24) & 0x0F));
@@ -33,7 +35,7 @@ void ata_read_sector(uint32_t lba, uint8_t* buffer)
 
     ata_wait_bsy();
     ata_wait_drq();
-
+    printf((uint8_t*)"exited stage \n",0);
     port_insw(ATA_PRIMARY_DATA, buffer, 256); // Read 256 words (512 bytes)
 }
 

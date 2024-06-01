@@ -31,7 +31,7 @@ void Keyboard(Registers* state)
     uint8_t data = keyboard_port.Read();
     data = scancode_to_ascii(data);
     char buffer[2] = {data, '\0'};
-    printf(buffer, 1); // print character
+    printf((uint8_t*)buffer, 1); // print character
     PIC_sendEOI(state->interrupt - PIC1); // number of irq
 }
 
@@ -67,5 +67,5 @@ void Populate_Irq_Entries()
     // We populate ISRHandlers with the irqs we defined
     ISR_RegisterHandler(PIC1_BASE_IRQ, Timer);
     ISR_RegisterHandler(PIC1_BASE_IRQ + 1, Keyboard);
-    ISR_RegisterHandler(PIC2_BASE_IRQ + 7, Disk); // Disk connected to IRQ 14 (or 15) depends if IDE is primary or secondary
+    ISR_RegisterHandler(PIC2_BASE_IRQ + 7, Disk); // Disk connected to IRQ 14 for (or 15) depends if IDE is primary or secondary
 }

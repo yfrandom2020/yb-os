@@ -12,7 +12,7 @@
 #include "idt/isr/isrgen.h"
 #include <stddef.h>
 
-void printf(const char* ptr, int flag);
+void printf(uint8_t* ptr, int flag);
 
 typedef struct
 {

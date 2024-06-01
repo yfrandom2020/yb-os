@@ -19,19 +19,19 @@ void clear_screen()
     // Reset cursor position
     x = 0;
     y = 0;
-    printf(">", 0);  // Add '>' at the beginning of a new line
+    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
 }
 
 void help_command() 
 {
-    printf("hello \n", 0);
-    printf(">", 0);  // Add '>' at the beginning of a new line
+    printf((uint8_t*)"hello \n", 0);
+    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
 }
 
 void unknown_command() 
 {
-    printf("Error \n", 0);
-    printf(">", 0);  // Add '>' at the beginning of a new line
+    printf((uint8_t*)"Error \n", 0);
+    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
 }
 
 void *memset(void *ptr, int value, size_t num) 
@@ -81,13 +81,18 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
-    
     clear_screen();
-    
     initializers();
 
+
+    
     // Entering main kernel loop
 
+    uint8_t buffer[512];
+    uint32_t sector = 0;
+    ata_read_sector(sector, buffer);
+    printf((uint8_t*)buffer,0);
+    printf((uint8_t*)" \n exited!", 0);
     while (true)
     {
         continue;

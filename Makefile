@@ -51,6 +51,8 @@ all:
 
 	sudo mv $(all_objects) $(path)
 
+	bash run.sh
+
 
 %.o: %.cpp
 	g++ $(GPPPARAMS) -o $@ -c $<

@@ -25,5 +25,5 @@ void initializers()
 
     ata_initialize(); // Initialize disk
 
-    Init_ext();
+    //Init_ext();
 }

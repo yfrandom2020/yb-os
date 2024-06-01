@@ -1,0 +1,1 @@
+this is a first test file of the ext2 file system 

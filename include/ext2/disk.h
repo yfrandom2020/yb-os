@@ -21,6 +21,7 @@
 #define ATA_SR_BSY 0x80
 #define ATA_SR_DRQ 0x08
 
+void printf(uint8_t* ptr, int flag);
 uint8_t port_inb(uint8_t portnumber);
 void port_outb(uint16_t port, uint8_t data);
 void port_insw(uint16_t port, void* addr, int count);
