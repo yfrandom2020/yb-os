@@ -13,6 +13,8 @@
 #define ATA_PRIMARY_COMMAND 0x1F7
 #define ATA_PRIMARY_STATUS 0x1F7
 #define ATA_PRIMARY_ALTSTATUS 0x3F6
+#define ATA_PRIMARY_CONTROL_BASE   0x3F6
+#define ATA_PRIMARY_CONTROL        (ATA_PRIMARY_CONTROL_BASE + 0)
 
 #define ATA_CMD_READ_PIO 0x20
 #define ATA_CMD_WRITE_PIO 0x30
@@ -20,6 +22,7 @@
 
 #define ATA_SR_BSY 0x80
 #define ATA_SR_DRQ 0x08
+#define ATA_SR_ERR                 0x01
 
 void printf(uint8_t* ptr, int flag);
 uint8_t port_inb(uint8_t portnumber);

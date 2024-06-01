@@ -22,6 +22,7 @@ void port_outb(uint16_t port, uint8_t data);
 void port_insw(uint16_t port, void* addr, int count);
 void port_outsw(uint16_t port, void* addr, int count);
 extern "C" void Init_pic();
+void disable_interrupt_flag();
 extern "C" void Enable_interrupts();
 extern "C" void PIC_sendEOI(uint8_t irq);
 void interrupt_flag();

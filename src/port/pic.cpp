@@ -71,6 +71,11 @@ extern "C" void Init_pic()
 
 }
 
+void disable_interrupt_flag()
+{
+    asm volatile("cli");
+}
+
 void enable_interrupt_flag()
 {
     asm volatile("sti");
