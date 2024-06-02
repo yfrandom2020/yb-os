@@ -1,4 +1,7 @@
-Non immediate tasks
-1. make better printf - one that accepts multiple arguments
-2. Re-order project file tree - add an include directory with all header files  
-3. Input buffering
+tasks
+make hard drive save state
+FAT16
+1) Read files that are loaded previously - parsing of cluster table
+2) write to existing files
+3) create files
+4) create directories

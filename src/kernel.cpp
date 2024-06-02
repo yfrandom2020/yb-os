@@ -22,6 +22,20 @@ void clear_screen()
     printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
 }
 
+void ben_dover()
+{
+    printf((uint8_t*)"sapoj cutie \n",0);
+    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
+}
+
+void shut_down()
+{
+    Port32Bit qemu(0xf4);
+    qemu.Write(0x10);
+    printf((uint8_t*)"\nShutting down FridkinOS... \n",0);
+    //loop_flag = false;
+}
+
 void help_command() 
 {
     printf((uint8_t*)"hello \n", 0);
@@ -83,27 +97,32 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // This function is the first to run and is the one called from the loader.s file
     clear_screen();
     initializers();
-
-
-    uint8_t buffer[512];
-    uint8_t buffer2[512];
+    uint32_t sector = 56;
+    uint8_t buffer[512]; // write with this
+    uint8_t buffer2[513]; // read into this
     for (int i = 0; i < 512; i++) 
     {
-        buffer[i] = 'a';
+        buffer[i] = 'b';
+        if (i == 10) buffer[i] = 'c';
     }
-    uint32_t sector = 0;
-    ata_write_sector(0,buffer2);
-    ata_read_sector(sector, buffer);
-    printf((uint8_t*)buffer,0);
-    printf((uint8_t*)" \n exited!", 0);
-    // third: 0x1E8
-    // fourth: 0x168
+    ata_write_sector(sector,buffer);
+    ata_read_sector(sector, buffer2); // buffer 2 is loaded
+    buffer2[512] = '\0';
+    printf((uint8_t*)buffer2,0);
+    printf((uint8_t*)"\n exited!", 0);
 
     // Entering main kernel loop
 
     while (true)
     {
-        continue;
+        if (loop_flag) continue;
+        else break;
     } 
+        // Send a command to QEMU monitor to exit
+    asm volatile (
+        "movl $0, %ebx\n\t" // 0 means normal exit
+        "movl $1, %eax\n\t" // Exit command number for QEMU
+        "int $0x2e\n\t"     // Execute QEMU system call
+    );
 }
 

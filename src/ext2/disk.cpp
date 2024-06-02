@@ -28,6 +28,12 @@ void ata_wait_drq()
     while (!(port_inb(ATA_PRIMARY_STATUS) & ATA_SR_DRQ));
 }
 
+void ata_flush()
+{
+    
+    ata_wait_bsy();
+    port_outb(ATA_PRIMARY_COMMAND, 0xE7);
+}
 
 void ata_read_sector(uint32_t lba, uint8_t* buffer) 
 {
@@ -82,5 +88,7 @@ void ata_write_sector(uint32_t lba, uint8_t* buffer)
     ata_wait_drq();
 
     port_outsw(ATA_PRIMARY_DATA, buffer, 256); // Write 256 words (512 bytes)
+    ata_flush();
     Enable_interrupts();
 }
+

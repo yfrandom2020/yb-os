@@ -1,4 +1,4 @@
-GPPPARAMS = -I./include -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fpermissive -g
+GPPPARAMS = -I./include -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fpermissive -g -nostdinc++
 ASPARAMS = --32 -I./include -g
 LDPARAMS = -melf_i386
 objects = loader.o kernel.o initializers.o gdt.o gdt_asm.o port.o pic.o idt.o isrs_gen.o isr.o isr_asm.o irq.o disk.o ext2.o
@@ -11,6 +11,7 @@ bin_path = /home/fridkin/os/yb-os
 
 .PHONY: all
 all:
+
 	clear
 
 	make second_clean
@@ -51,6 +52,7 @@ all:
 
 	sudo mv $(all_objects) $(path)
 
+	make check_disk_image
 	bash run.sh
 
 
@@ -126,4 +128,9 @@ second_clean:
 	@cd $(first_path) && \
 	rm -f $(objects) 
 
-
+.PHONY: check_disk_image
+check_disk_image:
+	@if [ ! -f os-disk.qcow2 ]; then \
+		echo "Disk image not found. Creating disk image..."; \
+		bash all.sh; \
+	fi

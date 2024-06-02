@@ -32,10 +32,13 @@ int command_length = 0;
 
 int8_t keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // Initializing a keyboard buffer that will contain what is typed
 int32_t keyboard_buffer_index = 0;
+bool loop_flag = true;
 
 void clear_screen();
 void help_command();
 void unknown_command();
+void ben_dover();
+void shut_down();
 void printf(uint8_t* ptr, int flag);
 void Populate_Irq_Entries();
 
@@ -51,6 +54,8 @@ const command_t all_commands[MAX_COMMANDS] =
 {
     {"clear", clear_screen},
     {"hello", help_command},
+    {"ben dover", ben_dover},
+    {"shut down", shut_down},
     
     // Add more commands here
     {"unknown", unknown_command}
