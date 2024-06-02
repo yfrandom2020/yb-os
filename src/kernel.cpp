@@ -85,14 +85,22 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     initializers();
 
 
-    
-    // Entering main kernel loop
-
     uint8_t buffer[512];
+    uint8_t buffer2[512];
+    for (int i = 0; i < 512; i++) 
+    {
+        buffer[i] = 'a';
+    }
     uint32_t sector = 0;
+    ata_write_sector(0,buffer2);
     ata_read_sector(sector, buffer);
     printf((uint8_t*)buffer,0);
     printf((uint8_t*)" \n exited!", 0);
+    // third: 0x1E8
+    // fourth: 0x168
+
+    // Entering main kernel loop
+
     while (true)
     {
         continue;

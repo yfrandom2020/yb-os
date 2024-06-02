@@ -20,9 +20,9 @@
 #define ATA_CMD_WRITE_PIO 0x30
 #define ATA_CMD_IDENTIFY 0xEC
 
-#define ATA_SR_BSY 0x80
+#define ATA_SR_BSY 0x00
 #define ATA_SR_DRQ 0x08
-#define ATA_SR_ERR                 0x01
+#define ATA_SR_ERR                 0x1
 
 void printf(uint8_t* ptr, int flag);
 uint8_t port_inb(uint8_t portnumber);
@@ -34,5 +34,4 @@ void ata_initialize();
 void ata_wait_bsy();
 void ata_wait_drq();
 void ata_read_sector(uint32_t lba, uint8_t* buffer);
-void ata_write_sector(uint32_t lba, const uint8_t* buffer);
-
+void ata_write_sector(uint32_t lba, uint8_t* buffer);

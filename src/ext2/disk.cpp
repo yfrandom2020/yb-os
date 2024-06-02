@@ -29,7 +29,9 @@ void ata_wait_drq()
 }
 
 
-void ata_read_sector(uint32_t lba, uint8_t* buffer) {
+void ata_read_sector(uint32_t lba, uint8_t* buffer) 
+{
+    
     disable_interrupt_flag();
     printf((uint8_t*)"In ata_read_sector\n",0);
 
@@ -43,7 +45,6 @@ void ata_read_sector(uint32_t lba, uint8_t* buffer) {
     port_outb(ATA_PRIMARY_LBA1, (uint8_t)(lba >> 8));
     port_outb(ATA_PRIMARY_LBA2, (uint8_t)(lba >> 16));
     
-    printf((uint8_t*)"Sending read command\n",0);
     port_outb(ATA_PRIMARY_COMMAND, ATA_CMD_READ_PIO);
 
     ata_wait_bsy(); // Wait for the drive to process the command
