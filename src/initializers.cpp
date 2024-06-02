@@ -23,7 +23,8 @@ void initializers()
 
     Enable_interrupts();
 
-    ata_initialize(); // Initialize disk
+
+    //ata_initialize(); // Initialize disk
 
     //Init_ext();
 }

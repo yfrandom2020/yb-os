@@ -44,7 +44,7 @@ void help_command()
 
 void unknown_command() 
 {
-    printf((uint8_t*)"Error \n", 0);
+    printf((uint8_t*)"error \n", 0);
     printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
 }
 
@@ -97,19 +97,32 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // This function is the first to run and is the one called from the loader.s file
     clear_screen();
     initializers();
-    uint32_t sector = 56;
-    uint8_t buffer[512]; // write with this
-    uint8_t buffer2[513]; // read into this
-    for (int i = 0; i < 512; i++) 
-    {
-        buffer[i] = 'b';
-        if (i == 10) buffer[i] = 'c';
-    }
-    ata_write_sector(sector,buffer);
-    ata_read_sector(sector, buffer2); // buffer 2 is loaded
-    buffer2[512] = '\0';
-    printf((uint8_t*)buffer2,0);
-    printf((uint8_t*)"\n exited!", 0);
+    
+    
+    AdvancedTechnologyAttachment ata0m(true, 0x1F0);
+    ata0m.Identify();
+    ata0m.Write28(100, (uint8_t*)"ata test", 8);
+    ata0m.Flush();
+    ata0m.Read28(100, 8);
+    
+    
+    
+    
+    
+    
+    // uint32_t sector = 56;
+    // uint8_t buffer[512]; // write with this
+    // uint8_t buffer2[513]; // read into this
+    // for (int i = 0; i < 512; i++) 
+    // {
+    //     buffer[i] = 'b';
+    //     if (i == 10) buffer[i] = 'c';
+    // }
+    // ata_write_sector(sector,buffer);
+    // ata_read_sector(sector, buffer2); // buffer 2 is loaded
+    // buffer2[512] = '\0';
+    // printf((uint8_t*)buffer2,0);
+    // printf((uint8_t*)"\n exited!", 0);
 
     // Entering main kernel loop
 
@@ -119,10 +132,5 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
         else break;
     } 
         // Send a command to QEMU monitor to exit
-    asm volatile (
-        "movl $0, %ebx\n\t" // 0 means normal exit
-        "movl $1, %eax\n\t" // Exit command number for QEMU
-        "int $0x2e\n\t"     // Execute QEMU system call
-    );
 }
 

@@ -68,7 +68,7 @@ extern "C" void __attribute__((cdecl)) ISR_Handler(Registers* regs)
     if (ISRHandlers[regs->interrupt] != NULL)
         ISRHandlers[regs->interrupt](regs); // Call the interrupt based on the interrupt number inside Registers struct
 
-    else printf((uint8_t*)"error \n", 0);    
+    //else printf((uint8_t*)"error \n", 0);    
 
     // else if (regs->interrupt >= 32)
     //     printf((uint8_t*)"Unhandled interrupt %d!\n", regs->interrupt);
