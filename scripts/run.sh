@@ -5,7 +5,7 @@ DISK_PATH="$DEPENDENCIES_DIR/$DISK_FILE"
 # Check if os-disk.qcow2 exists in the dependancies folder
 
 
-TEST_DIR="/test"
+TEST_DIR="./test"
 TEST_DISK_FILE="test.qcow2"
 TEST_DISK_PATH="$TEST_DIR/$TEST_DISK_FILE"
 
@@ -24,4 +24,4 @@ if [ ! -e "$DISK_PATH" ]; then
 fi
 
 # Run qemu-system-i386 with mykernel.iso and os-disk.qcow2
-/usr/bin/qemu-system-i386 -cdrom objects/mykernel.iso -drive file="$DISK_PATH",cache=none -boot d -m 512 -no-reboot -no-shutdown -d int -M smm=off -s
+/usr/bin/qemu-system-i386 -cdrom ./objects/mykernel.iso -drive file="$DISK_PATH",cache=none -boot d -m 512 -no-reboot -no-shutdown -d int -M smm=off -s

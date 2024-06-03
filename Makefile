@@ -54,7 +54,7 @@ all:
 
 	sudo mv $(all_objects) $(path)
 
-	bash run.sh
+	bash scripts/run.sh
 
 
 %.o: %.cpp
@@ -137,4 +137,4 @@ check_disk_image:
 	fi
 
 commit:
-	bash commit.sh
+	bash scripts/commit.sh
