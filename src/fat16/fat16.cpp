@@ -6,5 +6,6 @@ void readBootSector(uint8_t* bootSectorBuffer)
     // Implement reading of the boot sector using your disk I/O functions
     // For example:
     // readSector(0, bootSectorBuffer);
+    
 }
 
