@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------------------------------------------------*/
 // This is the main kernel file
 // This file is the main code that gets exectuted upon booting the os
-// The main function is kernelMain which will in turn call the other functions, such as IDT and PIC related function
+// The main function is kernelMain which will in turn call the other functions, such as IDT and PIC related function ()
 // Realistically, this os follows a monolythic kernel design so all processes are level 0
 /*--------------------------------------------------------------------------------------------------------------------*/
 #include <kernel.h>
