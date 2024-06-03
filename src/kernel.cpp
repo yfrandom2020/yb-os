@@ -83,10 +83,21 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     clear_screen();
     initializers();
     
+    AdvancedTechnologyAttachment ata0m(true, 0x1F0);
     ata0m.Identify();
-    //ata0m.Write28(100, (uint8_t*)"ata test", 8);
-    //ata0m.Flush();
-    //ata0m.Read28(0, 512);
+    uint8_t write_test[512];
+    for (int i = 0; i < 512; i++) 
+    {
+        write_test[i] = 'b';
+    }
+    ata0m.Write28(210, write_test, 512);
+    ata0m.Flush();
+
+    uint8_t ptr[513];
+    ptr[512] = '\0';
+    ata0m.Read28(160, 512,ptr);
+    printf((uint8_t*)"here \n",0);
+    printf(ptr, 0);
 
 
     while (true)

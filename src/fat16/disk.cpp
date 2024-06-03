@@ -60,47 +60,36 @@ void AdvancedTechnologyAttachment::Identify()
     }
 }
 
-void AdvancedTechnologyAttachment::Read28(uint32_t sectorNum, int count)
+void AdvancedTechnologyAttachment::Read28(uint32_t sectorNum, int count, uint8_t* ptr)
 {
     if(sectorNum > 0x0FFFFFFF)
         return;
     
-    devicePort.Write( (master ? 0xE0 : 0xF0) | ((sectorNum & 0x0F000000) >> 24) );
+    devicePort.Write((master ? 0xE0 : 0xF0) | ((sectorNum >> 24) & 0x0F));
     errorPort.Write(0);
     sectorCountPort.Write(1);
-    lbaLowPort.Write(  sectorNum & 0x000000FF );
-    lbaMidPort.Write( (sectorNum & 0x0000FF00) >> 8);
-    lbaLowPort.Write( (sectorNum & 0x00FF0000) >> 16 );
+    lbaLowPort.Write(sectorNum & 0x000000FF);
+    lbaMidPort.Write((sectorNum & 0x0000FF00) >> 8);
+    lbaHiPort.Write((sectorNum & 0x00FF0000) >> 16);
     commandPort.Write(0x20);
     
     uint8_t status = commandPort.Read();
-    while(((status & 0x80) == 0x80)
-       && ((status & 0x01) != 0x01))
+    while (((status & 0x80) == 0x80) && ((status & 0x01) != 0x01))
         status = commandPort.Read();
         
-    if(status & 0x01)
-    {
+    if (status & 0x01)
         return;
-    }
     
-    
-    
-    for(int i = 0; i < count; i += 2)
+    for (int i = 0; i < count; i += 2)
     {
         uint16_t wdata = dataPort.Read();
         
-        char *text = "  \0";
-        text[0] = wdata & 0xFF;
-        
-        if(i+1 < count)
-            text[1] = (wdata >> 8) & 0xFF;
-        else
-            text[1] = '\0';
-        
-         printf((uint8_t*)text,0);
-    }    
+        ptr[i] = wdata & 0xFF;
+        if (i + 1 < count)
+            ptr[i + 1] = (wdata >> 8) & 0xFF;
+    }
     
-    for(int i = count + (count%2); i < 512; i += 2)
+    for (int i = count + (count % 2); i < 512; i += 2)
         dataPort.Read();
 }
 
@@ -110,33 +99,35 @@ void AdvancedTechnologyAttachment::Write28(uint32_t sectorNum, uint8_t* data, ui
         return;
     if(count > 512)
         return;
+
+    // Set the drive and LBA high 4 bits
+    devicePort.Write((master ? 0xE0 : 0xF0) | ((sectorNum >> 24) & 0x0F));
     
-    
-    devicePort.Write( (master ? 0xE0 : 0xF0) | ((sectorNum & 0x0F000000) >> 24) );
     errorPort.Write(0);
     sectorCountPort.Write(1);
-    lbaLowPort.Write(  sectorNum & 0x000000FF );
-    lbaMidPort.Write( (sectorNum & 0x0000FF00) >> 8);
-    lbaLowPort.Write( (sectorNum & 0x00FF0000) >> 16 );
-    commandPort.Write(0x30);
+    lbaLowPort.Write(sectorNum & 0xFF); // LBA low byte
+    lbaMidPort.Write((sectorNum >> 8) & 0xFF); // LBA mid byte
+    lbaHiPort.Write((sectorNum >> 16) & 0xFF); // LBA high byte
+    commandPort.Write(0x30); // Write sectors command
     
-    
-
-    for(int i = 0; i < count; i += 2)
-    {
-        uint16_t wdata = data[i];
-        if(i+1 < count)
-            wdata |= ((uint16_t)data[i+1]) << 8;
-        dataPort.Write(wdata);
-        
-        char *text = "  \0";
-        text[0] = (wdata >> 8) & 0xFF;
-        text[1] = wdata & 0xFF;
+    // Wait until the drive is ready
+    uint8_t status = commandPort.Read();
+    while ((status & 0x80) && !(status & 0x08)) {
+        status = commandPort.Read();
     }
     
-    for(int i = count + (count%2); i < 512; i += 2)
+    // Write the data
+    for (int i = 0; i < count; i += 2)
+    {
+        uint16_t wdata = data[i];
+        if (i + 1 < count)
+            wdata |= ((uint16_t)data[i + 1]) << 8;
+        dataPort.Write(wdata);
+    }
+    
+    // Pad remaining data with zeros if count is less than 512
+    for (int i = count + (count % 2); i < 512; i += 2)
         dataPort.Write(0x0000);
-
 }
 
 void AdvancedTechnologyAttachment::Flush()

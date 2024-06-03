@@ -31,7 +31,7 @@ char command_buffer[MAX_COMMAND_LENGTH]; // printing related - a buffer to store
 int command_length = 0;
 
 bool loop_flag = true;
-AdvancedTechnologyAttachment ata0m(true, 0x1F0);
+
 
 void *memset(void *ptr, int value, size_t num);
 int strcmp(const char *str1, const char *str2);
