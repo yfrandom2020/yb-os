@@ -4,3 +4,6 @@ FAT16
 2) write to existing files
 3) create files
 4) create directories
+
+IMPORTANT fix printf & delete
+OPTIONAL: re-structure code and generalize paths

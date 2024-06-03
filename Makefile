@@ -4,10 +4,10 @@ LDPARAMS = -melf_i386
 objects = loader.o kernel.o util.o initializers.o gdt.o gdt_asm.o port.o pic.o idt.o isrs_gen.o isr.o isr_asm.o irq.o disk.o fat16.o
 all_objects = $(objects) mykernel.bin mykernel.iso
 path = /home/fridkin/os/yb-os/objects
-first_path = /home/fridkin/os/yb-os/src
+src_path = /home/fridkin/os/yb-os/src
 include_path = /home/fridkin/os/yb-os/include
 shared_path = /mnt/hgfs/vm-shared-2
-bin_path = /home/fridkin/os/yb-os
+common_path = /home/fridkin/os/yb-os
 
 .PHONY: all
 all:
@@ -54,30 +54,29 @@ all:
 
 	sudo mv $(all_objects) $(path)
 
-	make check_disk_image
 	bash run.sh
 
 
 %.o: %.cpp
 	g++ $(GPPPARAMS) -o $@ -c $<
-	-@sudo mv $@ $(bin_path)
+	-@sudo mv $@ $(common_path)
 
 
 %.o: %.s
 	as $(ASPARAMS) -o $@ $<
-	-@sudo mv $@ $(bin_path)
+	-@sudo mv $@ $(common_path)
 
 
 gdt.o:
 	@cd gdt && \
 	make gdt.o && \
-	mv gdt.o $(bin_path)
+	mv gdt.o $(common_path)
 
 
 port.o:
 	@cd port && \
 	make port.o && \
-	mv port.o $(bin_path)
+	mv port.o $(common_path)
 
 
 kernel.o:
@@ -127,12 +126,15 @@ second_clean:
 	@cd $(include_path) && \
 	rm -f $(objects) 
 	
-	@cd $(first_path) && \
+	@cd $(src_path) && \
 	rm -f $(objects) 
 
 .PHONY: check_disk_image
 check_disk_image:
-	@if [ ! -f os-disk.qcow2 ]; then \
+	@if [ ! -f dependancies/os-disk.qcow2 ]; then \
 		echo "Disk image not found. Creating disk image..."; \
 		bash disk.sh; \
 	fi
+
+commit:
+	bash commit.sh
