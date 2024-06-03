@@ -11,24 +11,26 @@ void clear_screen()
 {
     // QEMU prints some text to screen about boot device
     // Before doing any actions, clear screen
-    for (int y = 0; y < SCREEN_HEIGHT; y++) {
-        for (int x = 0; x < SCREEN_WIDTH; x++) {
+    for (int y = 0; y < SCREEN_HEIGHT; y++) 
+    {
+        for (int x = 0; x < SCREEN_WIDTH; x++) 
+        {
             VideoMemory[y * SCREEN_WIDTH + x] = (WHITE_ON_BLACK << 8) | ' ';
         }
     }
     // Reset cursor position
     x = 0;
     y = 0;
-    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
+    printf((uint8_t*)">", 0);  
 }
 
 void ben_dover()
 {
     printf((uint8_t*)"sapoj cutie \n",0);
-    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
+    printf((uint8_t*)">", 0);  
 }
 
-void shut_down()
+void shut_down() // test shut down - when qemu sits on specific port
 {
     Port32Bit qemu(0xf4);
     qemu.Write(0x10);
@@ -39,13 +41,13 @@ void shut_down()
 void help_command() 
 {
     printf((uint8_t*)"hello \n", 0);
-    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
+    printf((uint8_t*)">", 0); 
 }
 
 void unknown_command() 
 {
     printf((uint8_t*)"error \n", 0);
-    printf((uint8_t*)">", 0);  // Add '>' at the beginning of a new line
+    printf((uint8_t*)">", 0);  
 }
 
 void *memset(void *ptr, int value, size_t num) 
@@ -63,23 +65,6 @@ void *memset(void *ptr, int value, size_t num)
 
 // Extern "C" means that when compiling the source code, the name of the function will not be changed by the compiler
 // This is done in order to call function from other files, and making sure that the names are saved
-void fill_keyboard_buffer(uint8_t letter)
-{
-    static int32_t index = 0;
-    // This is part of the keyboard driver
-    // This function will be called by the ISR when the input happens
-    command_buffer[index] = letter;
-    // Enter means that the current data that was typed will be inputted as a command to the kernel. In this case we will first reset the buffer and then execute the command
-    keyboard_buffer[index] = letter;
-    if (index < 127)
-    {
-        index++;
-    }
-    if (letter == '\n')
-    {
-        index = 0;
-    }
-}
 
 // Conventions
 typedef void (*constructor)();
@@ -98,39 +83,16 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     clear_screen();
     initializers();
     
-    
-    AdvancedTechnologyAttachment ata0m(true, 0x1F0);
     ata0m.Identify();
-    ata0m.Write28(100, (uint8_t*)"ata test", 8);
-    ata0m.Flush();
-    ata0m.Read28(100, 8);
-    
-    
-    
-    
-    
-    
-    // uint32_t sector = 56;
-    // uint8_t buffer[512]; // write with this
-    // uint8_t buffer2[513]; // read into this
-    // for (int i = 0; i < 512; i++) 
-    // {
-    //     buffer[i] = 'b';
-    //     if (i == 10) buffer[i] = 'c';
-    // }
-    // ata_write_sector(sector,buffer);
-    // ata_read_sector(sector, buffer2); // buffer 2 is loaded
-    // buffer2[512] = '\0';
-    // printf((uint8_t*)buffer2,0);
-    // printf((uint8_t*)"\n exited!", 0);
+    //ata0m.Write28(100, (uint8_t*)"ata test", 8);
+    //ata0m.Flush();
+    //ata0m.Read28(0, 512);
 
-    // Entering main kernel loop
 
     while (true)
     {
         if (loop_flag) continue;
         else break;
     } 
-        // Send a command to QEMU monitor to exit
 }
 

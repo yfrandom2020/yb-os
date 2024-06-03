@@ -1,7 +1,7 @@
 GPPPARAMS = -I./include -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fpermissive -g -nostdinc++
 ASPARAMS = --32 -I./include -g
 LDPARAMS = -melf_i386
-objects = loader.o kernel.o initializers.o gdt.o gdt_asm.o port.o pic.o idt.o isrs_gen.o isr.o isr_asm.o irq.o disk.o ext2.o
+objects = loader.o kernel.o util.o initializers.o gdt.o gdt_asm.o port.o pic.o idt.o isrs_gen.o isr.o isr_asm.o irq.o disk.o fat16.o
 all_objects = $(objects) mykernel.bin mykernel.iso
 path = /home/fridkin/os/yb-os/objects
 first_path = /home/fridkin/os/yb-os/src
@@ -24,6 +24,8 @@ all:
 
 	make src/initializers.o
 
+	make src/util/util.o
+
 	make src/gdt/gdt.o
 
 	make src/gdt/gdt_asm.o
@@ -42,9 +44,9 @@ all:
 	
 	make src/idt/isr/irq/irq.o
 
-	make src/ext2/disk.o
+	make src/fat16/disk.o
 
-	make src/ext2/ext2.o
+	make src/fat16/fat16.o
 
 	make mykernel.bin
 
@@ -132,5 +134,5 @@ second_clean:
 check_disk_image:
 	@if [ ! -f os-disk.qcow2 ]; then \
 		echo "Disk image not found. Creating disk image..."; \
-		bash all.sh; \
+		bash disk.sh; \
 	fi

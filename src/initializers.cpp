@@ -9,7 +9,6 @@ void initializers()
     // 4) Re - enable interrupts
     // 5) Initialize the disk
 
-    initialize_buffers();
     
     GDT_Initialize(); 
 

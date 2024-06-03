@@ -1,7 +1,6 @@
 #pragma once 
 
 void initializers();
-void initialize_buffers();
 void GDT_Initialize();
 extern "C" void IDT_Initialize();
 extern "C" void ISR_Initialize();

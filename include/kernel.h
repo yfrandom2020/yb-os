@@ -2,7 +2,7 @@
 // The kernel header will include all the other header files
 // Therefore, when creating header files of new tasks it is only needed to include the kernel.h file
 #pragma once
-#include "types.h"
+#include <types.h>
 #include "gdt/gdt.h"
 #include "port/port.h"
 #include "port/pic.h"
@@ -10,8 +10,8 @@
 #include "idt/util.h"
 #include "idt/isr/isr.h"
 #include "idt/isr/isrgen.h"
-#include "ext2/disk.h"
-#include "ext2/ext2.h"
+#include "fat16/disk.h"
+#include "fat16/fat16.h"
 
 #define KEYBOARD_BUFFER_SIZE 128
 #define VIDEO_MEMORY_ADDRESS 0xb8000 // Special address in RAM that when written to prints on screen
@@ -25,20 +25,24 @@ extern uint64_t up_time = 0;
 typedef void (*command_func_t)(void); // pointer to a void function that takes no arguments
 
 uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
-uint8_t x = 0, y = 0;
+extern uint8_t x = 0, y = 0;
 
 char command_buffer[MAX_COMMAND_LENGTH]; // printing related - a buffer to store the characters written 
 int command_length = 0;
 
-int8_t keyboard_buffer[KEYBOARD_BUFFER_SIZE]; // Initializing a keyboard buffer that will contain what is typed
-int32_t keyboard_buffer_index = 0;
 bool loop_flag = true;
+AdvancedTechnologyAttachment ata0m(true, 0x1F0);
 
+void *memset(void *ptr, int value, size_t num);
+int strcmp(const char *str1, const char *str2);
 void clear_screen();
 void help_command();
+
 void unknown_command();
 void ben_dover();
+
 void shut_down();
+
 void printf(uint8_t* ptr, int flag);
 void Populate_Irq_Entries();
 
@@ -62,27 +66,6 @@ const command_t all_commands[MAX_COMMANDS] =
 };
 
 
-int strcmp(const char *str1, const char *str2) 
-{
-    // Compare between two strings and return wether they are equal or not    
-    while (*str1 && (*str1 == *str2)) 
-    {
-        str1++;
-        str2++;
-    }
-    return *(unsigned char *)str1 - *(unsigned char *)str2; // 0 if equal
-}
-
-
-void initialize_buffers()
-{
-    // Set the keyboard and command buffer to zero
-    for (int32_t i = 0; i < 128; i++)
-    {
-        keyboard_buffer[i] = '\0';
-        command_buffer[i] = '\0';
-    }
-}
 
 
 void execute_command() 
@@ -98,7 +81,6 @@ void execute_command()
             found = 1;
             command_length = 0;
             return;
-            break;
         }
     }
 
@@ -172,7 +154,5 @@ void printf(uint8_t* str, int flag)
     }
 }
 
-// util - replace the stdlib memset function
-void *memset(void *ptr, int value, size_t num);
 
 

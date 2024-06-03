@@ -1,5 +1,4 @@
 tasks
-make hard drive save state
 FAT16
 1) Read files that are loaded previously - parsing of cluster table
 2) write to existing files
