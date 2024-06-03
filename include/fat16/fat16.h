@@ -5,6 +5,10 @@
 
 typedef struct 
 {
+    // The mbr contains three different parts
+    // Boot code - first 446 bytes
+    // Partition tables - 4 entries with each sized 16 bytes that describe different partitions on the disk 
+    // The struct describes a single entry
     uint8_t  bootIndicator;
     uint8_t  startHead;
     uint8_t  startSector;
@@ -20,14 +24,16 @@ typedef struct
 
 typedef struct 
 {
+    // Implement mbr strcure, we will load this into sector 0
     uint8_t  bootstrap[446];
     MBR_PartitionEntry partitionTable[4];
-    uint16_t signature;
+    uint16_t signature; // 0x55AA
 } __attribute__((packed)) MBR;
 
 
 typedef struct 
 {
+    // The first sector of each partition is called the boot sector and contains some metadata about the partition and file system
     uint8_t  BS_jmpBoot[3];
     uint8_t  BS_OEMName[8];
     uint16_t BPB_BytsPerSec;
@@ -50,5 +56,5 @@ typedef struct
     uint8_t  BS_FilSysType[8];
 } __attribute__((packed)) FAT16_BootSector;
 
-void readBootSector(uint8_t* bootSectorBuffer);
-FAT16_BootSector parseBootSector(uint8_t* bootSectorBuffer);
+void readBootSector(uint8_t* bootSectorBuffer); // Use ata_read_sector  
+FAT16_BootSector parseBootSector(uint8_t* bootSectorBuffer); // Receive the data from previous function and parse

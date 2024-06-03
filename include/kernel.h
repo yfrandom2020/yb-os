@@ -118,7 +118,8 @@ void putchar(char c, int flag)
             x = 0;
             y++;
             if (flag == 1) execute_command();
-            if (y >= SCREEN_HEIGHT) {
+            if (y >= SCREEN_HEIGHT) 
+            {
                 scroll();
             }
             break;
