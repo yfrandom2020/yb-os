@@ -24,6 +24,55 @@ void clear_screen()
     printf((uint8_t*)">", 0);  
 }
 
+void printDecimal()
+{
+    // Define a buffer to store the decimal representation
+    uint8_t buffer[6]; // Max 5 digits for a 16-bit value + null terminator
+    
+    // Initialize variables
+    int i = 0;
+    uint16_t temp = up_time;
+    
+    // Handle special case when up_time is 0
+    if (temp == 0) {
+        buffer[i++] = '0';
+    } else {
+        // Iterate to extract each digit
+        while (temp != 0) {
+            // Extract the least significant digit
+            uint16_t digit = temp % 10;
+            
+            // Convert the digit to ASCII and store it in the buffer
+            buffer[i++] = digit + '0';
+            
+            // Move to the next digit
+            temp /= 10;
+        }
+    }
+    
+    // Add null terminator to the end of the buffer
+    buffer[i] = '\0';
+    
+    // Reverse the buffer
+    int len = i;
+    for (i = 0; i < len / 2; i++) {
+        char temp = buffer[i];
+        buffer[i] = buffer[len - i - 1];
+        buffer[len - i - 1] = temp;
+    }
+    
+    // Print the decimal representation
+    printf(buffer,0);
+}
+
+void uptime()
+{
+    printf((uint8_t*)"the OS is up for: ",0);
+    printfHex(up_time / 10);
+    printf((uint8_t*)" seconds \n",0);
+    printf((uint8_t*)">",0);
+}
+
 void ben_dover()
 {
     printf((uint8_t*)"sapoj cutie \n",0);
@@ -85,19 +134,21 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     
     AdvancedTechnologyAttachment ata0m(true, 0x1F0);
     ata0m.Identify();
-    uint8_t write_test[512];
-    for (int i = 0; i < 512; i++) 
-    {
-        write_test[i] = 'b';
-    }
-    ata0m.Write28(210, write_test, 512);
-    ata0m.Flush();
+    
+    
+    // uint8_t write_test[512];
+    // for (int i = 0; i < 512; i++) 
+    // {
+    //     write_test[i] = 'b';
+    // }
+    // ata0m.Write28(210, write_test, 512);
+    // ata0m.Flush();
 
-    uint8_t ptr[513];
-    ptr[512] = '\0';
-    ata0m.Read28(160, 512,ptr);
-    printf((uint8_t*)"here \n",0);
-    printf(ptr, 0);
+    // uint8_t ptr[513];
+    // ptr[512] = '\0';
+    // ata0m.Read28(160, 512,ptr);
+    // printf((uint8_t*)"here \n",0);
+    // printf(ptr, 0);
 
 
     while (true)

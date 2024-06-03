@@ -21,7 +21,7 @@
 #define MAX_COMMAND_LENGTH 128
 #define MAX_COMMANDS 10
 
-extern uint64_t up_time = 0;
+extern uint8_t up_time = 0;
 typedef void (*command_func_t)(void); // pointer to a void function that takes no arguments
 
 uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
@@ -37,11 +37,12 @@ void *memset(void *ptr, int value, size_t num);
 int strcmp(const char *str1, const char *str2);
 void clear_screen();
 void help_command();
-
+void printDecimal();
 void unknown_command();
 void ben_dover();
 
 void shut_down();
+void uptime();
 
 void printf(uint8_t* ptr, int flag);
 void Populate_Irq_Entries();
@@ -60,8 +61,7 @@ const command_t all_commands[MAX_COMMANDS] =
     {"hello", help_command},
     {"ben dover", ben_dover},
     {"shut down", shut_down},
-    
-    // Add more commands here
+    {"up time", printDecimal},
     {"unknown", unknown_command}
 };
 
@@ -146,7 +146,7 @@ void putchar(char c, int flag)
 void printf(uint8_t* str, int flag) 
 {
     // Flag is a general parameter that indicates if call is from user or from kernel
-    // If from use (1) we activate the keyboard buffer and invoke the commands list
+    // If from user (1) we activate the keyboard buffer and invoke the commands list
     // Else pass
     // Future - add support of variables %d, %s
     for (int i = 0; str[i] != '\0'; i++) {
@@ -154,5 +154,14 @@ void printf(uint8_t* str, int flag)
     }
 }
 
+
+void printfHex(uint8_t key)
+{
+    uint8_t* foo = (uint8_t*)"00";
+    uint8_t* hex = (uint8_t*)"0123456789ABCDEF";
+    foo[0] = hex[(key >> 4) & 0xF];
+    foo[1] = hex[key & 0xF];
+    printf(foo,0);
+}
 
 
