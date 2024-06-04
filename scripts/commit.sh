@@ -1,4 +1,6 @@
 #!/bin/bash
+# Simple bash script that pushes changes to github repository
+
 
 # Prompt the user for a commit message
 echo "Enter your commit message:"
