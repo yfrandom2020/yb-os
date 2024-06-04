@@ -4,7 +4,7 @@
 #include <port/port.h>
 
 void printf(uint8_t* ltr, int flag);   
-class AdvancedTechnologyAttachment
+class ata
 {
 protected:
     bool master;
@@ -19,8 +19,8 @@ protected:
     Port8Bit controlPort;
 public:
     
-    AdvancedTechnologyAttachment(bool master, uint16_t portBase);
-    ~AdvancedTechnologyAttachment();
+    ata(bool master, uint16_t portBase);
+    ~ata();
     
     void Identify();
     void Read28(uint32_t sectorNum, int count = 512, uint8_t* ptr=nullptr);

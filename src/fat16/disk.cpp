@@ -1,7 +1,7 @@
 #include <fat16/disk.h>
 
 
-AdvancedTechnologyAttachment::AdvancedTechnologyAttachment(bool master, uint16_t portBase)
+ata::ata(bool master, uint16_t portBase)
 :   dataPort(portBase),
     errorPort(portBase + 0x1),
     sectorCountPort(portBase + 0x2),
@@ -15,11 +15,11 @@ AdvancedTechnologyAttachment::AdvancedTechnologyAttachment(bool master, uint16_t
     this->master = master;
 }
 
-AdvancedTechnologyAttachment::~AdvancedTechnologyAttachment()
+ata::~ata()
 {
 }
             
-void AdvancedTechnologyAttachment::Identify()
+void ata::Identify()
 {
     devicePort.Write(master ? 0xA0 : 0xB0);
     controlPort.Write(0);
@@ -60,7 +60,7 @@ void AdvancedTechnologyAttachment::Identify()
     }
 }
 
-void AdvancedTechnologyAttachment::Read28(uint32_t sectorNum, int count, uint8_t* ptr)
+void ata::Read28(uint32_t sectorNum, int count, uint8_t* ptr)
 {
     if(sectorNum > 0x0FFFFFFF)
         return;
@@ -93,7 +93,7 @@ void AdvancedTechnologyAttachment::Read28(uint32_t sectorNum, int count, uint8_t
         dataPort.Read();
 }
 
-void AdvancedTechnologyAttachment::Write28(uint32_t sectorNum, uint8_t* data, uint32_t count)
+void ata::Write28(uint32_t sectorNum, uint8_t* data, uint32_t count)
 {
     if(sectorNum > 0x0FFFFFFF)
         return;
@@ -130,7 +130,7 @@ void AdvancedTechnologyAttachment::Write28(uint32_t sectorNum, uint8_t* data, ui
         dataPort.Write(0x0000);
 }
 
-void AdvancedTechnologyAttachment::Flush()
+void ata::Flush()
 {
     devicePort.Write( master ? 0xE0 : 0xF0 );
     commandPort.Write(0xE7);

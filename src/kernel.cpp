@@ -11,7 +11,7 @@ uint8_t x = 0;
 uint8_t y = 0;
 uint8_t up_time = 0;
 int command_length = 0;
-
+ata ata0m(true, 0x1F0);
 
 void clear_screen() 
 {
@@ -135,20 +135,13 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
-
+    // This simply calls initalizers and then enters a never ending loop
     
-    
-    clear_screen();
     initializers();
     
-    AdvancedTechnologyAttachment ata0m(true, 0x1F0);
-    ata0m.Identify();
-
-
-    while (true)
+    for (int i = 0; i < 10; i++)
     {
-        if (loop_flag) continue;
-        else break;
-    } 
+        i--;
+    }
 }
 

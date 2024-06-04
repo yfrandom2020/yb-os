@@ -2,7 +2,8 @@
 #include <types.h>
 #include <fat16/disk.h>
 #include <stddef.h>
-
+#include <util/util.h>
+extern ata ata0m;
 typedef struct 
 {
     // The mbr contains three different parts
@@ -36,12 +37,12 @@ typedef struct
     // The first sector of each partition is called the boot sector and contains some metadata about the partition and file system
     uint8_t  BS_jmpBoot[3];
     uint8_t  BS_OEMName[8];
-    uint16_t BPB_BytsPerSec;
-    uint8_t  BPB_SecPerClus;
+    uint16_t BPB_BytsPerSec; // 512
+    uint8_t  BPB_SecPerClus; // 8 
     uint16_t BPB_RsvdSecCnt;
-    uint8_t  BPB_NumFATs;
-    uint16_t BPB_RootEntCnt;
-    uint16_t BPB_TotSec16;
+    uint8_t  BPB_NumFATs; // usually 2
+    uint16_t BPB_RootEntCnt; // garbage value, must be set
+    uint16_t BPB_TotSec16; 
     uint8_t  BPB_Media;
     uint16_t BPB_FATSz16;
     uint16_t BPB_SecPerTrk;
@@ -56,5 +57,12 @@ typedef struct
     uint8_t  BS_FilSysType[8];
 } __attribute__((packed)) FAT16_BootSector;
 
-void readBootSector(uint8_t* bootSectorBuffer); // Use ata_read_sector  
+
+
+void Read_MBR(MBR* mbr_sector);
+void readBootSector(); // Use ata_read_sector  
 FAT16_BootSector parseBootSector(uint8_t* bootSectorBuffer); // Receive the data from previous function and parse
+
+extern uint32_t lba_start;
+extern uint32_t lba_limit;
+extern uint8_t partition_type;

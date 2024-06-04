@@ -32,6 +32,8 @@ extern int command_length; // Indexer - point to the available element in buffer
 
 bool loop_flag = true;
 
+extern ata ata0m; // ATA PIO disk interface with the virtual hard drive created in run.sh
+
 
 void *memset(void *ptr, int value, size_t num);
 int strcmp(const char *str1, const char *str2); // From util.cpp

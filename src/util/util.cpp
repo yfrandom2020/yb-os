@@ -1,4 +1,4 @@
-typedef unsigned long size_t;
+#include <util/util.h>
 int strcmp(const char *str1, const char *str2) 
 {
     // Util - Compare between two strings and return wether they are equal or not    
@@ -14,6 +14,8 @@ int strcmp(const char *str1, const char *str2)
 
 void *memset(void *ptr, int value, size_t num) 
 {
+    // Fill memory with values
+    // In: 1) pointer to address 2) value to put 3) how many bytes
     unsigned char *p = (unsigned char *)ptr;
     unsigned char v = (unsigned char)value;
 

@@ -9,6 +9,7 @@ void initializers()
     // 4) Re - enable interrupts
     // 5) Initialize the disk
 
+    clear_screen();
     
     GDT_Initialize(); 
 
@@ -22,7 +23,7 @@ void initializers()
 
     Enable_interrupts();
 
-
+    ata0m.Identify();
     //ata_initialize(); // Initialize disk
 
     //Init_ext();
