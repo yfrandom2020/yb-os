@@ -7,6 +7,12 @@
 #include <kernel.h>
 #include <initializers.h>
 
+uint8_t x = 0;
+uint8_t y = 0;
+uint8_t up_time = 0;
+int command_length = 0;
+
+
 void clear_screen() 
 {
     // QEMU prints some text to screen about boot device
@@ -129,6 +135,9 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
 {
     // This is the kernelMain function - the main function of the kernel and the os
     // This function is the first to run and is the one called from the loader.s file
+
+    
+    
     clear_screen();
     initializers();
     

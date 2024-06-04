@@ -1,13 +1,19 @@
 // In this file we will handle the hardware interrupts received from components such as keyboard and timer
 #include <idt/isr/irq/irq.h>
 #include <port/port.h>
+#define MAX_COMMAND_LENGTH 128
+#define VIDEO_MEMORY_ADDRESS 0xb8000
+#define WHITE_ON_BLACK 0x0F
+#define SCREEN_WIDTH 80
 
 Port8Bit keyboard_port((uint8_t)0x60);
-extern uint64_t up_time;
-extern uint8_t x,y;
+extern uint64_t up_time; // Extern means we tell the compiler that the variable is defined somwhere else
+extern uint8_t x,y; // We define in kernel.cpp
+char command_buffer[MAX_COMMAND_LENGTH];
+extern int command_length;
+extern uint16_t* VideoMemory;
 void putchar(char c, int flag);
-#define SCREEN_WIDTH 80
-#define SCREEN_HEIGHT 25
+
 
 uint8_t scancode_to_ascii(uint8_t scancode) {
     // Extended scan code to ASCII conversion table for alphanumeric and common symbols
@@ -29,41 +35,44 @@ uint8_t scancode_to_ascii(uint8_t scancode) {
     }
     return 0;
 }
-void Keyboard(Registers* state)
+
+
+void Keyboard(Registers* state) 
 {
-    // Keyboard isr  
-    // 1. Read from the relevant port (0x60) the data of the keyboard
-    // 2. Translate to ASCII
-    // Forward to kernel buffers
+    // Keyboard ISR
     uint8_t data = keyboard_port.Read();
     data = scancode_to_ascii(data);
     
     if (data == '\b') 
     {
         // Handle backspace
-        if (x > 0 && !(x == 1 && y == 0)) 
+        if (command_length > 0) 
         {
-            // Check if cursor is at the position of the prompt symbol
-            if (x == 1 && y > 0) {
-                // Move cursor to end of previous line
-                x = SCREEN_WIDTH - 1;
-                y--;
-            } 
-            else 
-            {
-                x--;
+            if (x > 1 || (x == 1 && y > 0)) 
+            { // Ensure '>' is not deleted
+                if (x == 0 && y > 0) 
+                {
+                    // Move to the end of the previous line
+                    y--;
+                    x = SCREEN_WIDTH - 1;
+                } 
+                else if (x > 0) 
+                {
+                    x--;
+                }
+                // Clear the character from the screen and command buffer
+                VideoMemory[y * SCREEN_WIDTH + x] = (WHITE_ON_BLACK << 8) | ' ';
+                command_length--;
+                command_buffer[command_length] = '\0';
             }
-            putchar(' ', 1); // Print a space to clear the character
-            x--; // Move cursor back one more position
         }
-    } 
-    else 
+    } else 
     {
         char buffer[2] = {data, '\0'};
-        printf((uint8_t*)buffer, 1); // print character
+        printf((uint8_t*)buffer, 1); // Print character
     }
     
-    PIC_sendEOI(state->interrupt - PIC1); // number of irq
+    PIC_sendEOI(state->interrupt - PIC1); // Number of IRQ
 }
 
 void Timer(Registers* state)

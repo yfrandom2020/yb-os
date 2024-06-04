@@ -21,31 +21,30 @@
 #define MAX_COMMAND_LENGTH 128
 #define MAX_COMMANDS 10
 
-extern uint8_t up_time = 0;
-typedef void (*command_func_t)(void); // pointer to a void function that takes no arguments
+extern uint8_t up_time;
+typedef void (*command_func_t)(void); // Pointer to a void function that takes no arguments
 
-uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
-extern uint8_t x = 0, y = 0;
+extern uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
+extern uint8_t x,y;
 
-char command_buffer[MAX_COMMAND_LENGTH]; // printing related - a buffer to store the characters written 
-int command_length = 0;
+extern char command_buffer[MAX_COMMAND_LENGTH]; // Printing related - a buffer to store the characters written
+extern int command_length; // Indexer - point to the available element in buffer length
 
 bool loop_flag = true;
 
 
 void *memset(void *ptr, int value, size_t num);
-int strcmp(const char *str1, const char *str2);
+int strcmp(const char *str1, const char *str2); // From util.cpp
+
 void clear_screen();
 void help_command();
 void printDecimal();
 void unknown_command();
 void ben_dover();
-
 void shut_down();
-void uptime();
+void uptime(); // Declare commands - implemnted in kernel.cpp
 
 void printf(uint8_t* ptr, int flag);
-void Populate_Irq_Entries();
 
 typedef struct 
 {
@@ -55,7 +54,7 @@ typedef struct
     command_func_t func;
 } __attribute__((packed)) command_t;
 
-const command_t all_commands[MAX_COMMANDS] = 
+const command_t all_commands[MAX_COMMANDS] = // List of all available commands
 {
     {"clear", clear_screen},
     {"hello", help_command},
@@ -65,12 +64,9 @@ const command_t all_commands[MAX_COMMANDS] =
     {"unknown", unknown_command}
 };
 
-
-
-
-void execute_command() 
+void execute_command() // Called by putchar in case of \n from user. Go over the string stored in command buffer and figure out if it's valid command
 {
-    command_buffer[command_length] = '\0'; // add a terminator in the end
+    command_buffer[command_length] = '\0'; // Add a terminator at the end
     int found = 0;
 
     for (int i = 0; i < MAX_COMMANDS; i++) 
@@ -80,13 +76,11 @@ void execute_command()
             all_commands[i].func();
             found = 1;
             command_length = 0;
-            return;
+            break;
         }
     }
 
-    if (!found) {
-        unknown_command();
-    }
+    if (!found) unknown_command();
 
     // Clear the command buffer
     command_length = 0;
@@ -110,10 +104,8 @@ void scroll()
 
 void putchar(char c, int flag) 
 {
-    // Print a single character to screen
-    // Using static variables x and y to determine position in the video memory
-    // Flag 1 for normal prints - flag zero for prints emitted from handler functions
-    switch (c) {
+    switch (c) 
+    {
         case '\n':
             x = 0;
             y++;
@@ -124,21 +116,23 @@ void putchar(char c, int flag)
             }
             break;
         default:
-            if (c != '>') 
+            if (flag == 1) 
             {
-                if (flag == 1) command_buffer[command_length++] = c;
-                //printf("not a >, adding to buffer", 0);
+                command_buffer[command_length] = c;
+                command_length++;
             }
             VideoMemory[y * SCREEN_WIDTH + x] = (WHITE_ON_BLACK << 8) | c;
             x++;
             break;
     }
 
-    if (x >= SCREEN_WIDTH) {
+    if (x >= SCREEN_WIDTH) // Move to the next line if needed
+    {
         x = 0;
         y++;
     }
-    if (y >= SCREEN_HEIGHT) {
+    if (y >= SCREEN_HEIGHT) 
+    {
         scroll();
     }
 }
@@ -150,7 +144,8 @@ void printf(uint8_t* str, int flag)
     // If from user (1) we activate the keyboard buffer and invoke the commands list
     // Else pass
     // Future - add support of variables %d, %s
-    for (int i = 0; str[i] != '\0'; i++) {
+    for (int i = 0; str[i] != '\0'; i++) 
+    {
         putchar(str[i], flag);
     }
 }
