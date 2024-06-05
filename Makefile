@@ -3,7 +3,7 @@
 # 1) compilation instructions for c++ src files and asm src files 
 # 2) 2) linking instructions using the script linker.ld to create mykernel.bin, which is the actual file being run in the QEMU machine
 # 3) Calling scripts that 1) create the virtual hard drive (run.sh) and commit changes to github (commit.sh)
-GPPPARAMS = -I./include -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fpermissive -g -nostdinc++
+GPPPARAMS = -I./include -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wall -Werror -g -nostdinc++
 ASPARAMS = --32 -I./include -g
 LDPARAMS = -melf_i386
 objects = loader.o kernel.o util.o initializers.o gdt.o gdt_asm.o port.o pic.o idt.o isrs_gen.o isr.o isr_asm.o irq.o disk.o fat16.o

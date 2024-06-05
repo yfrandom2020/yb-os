@@ -6,6 +6,23 @@ MBR mbr;
 FAT16_BootSector boot_sector;
 uint32_t lba_start;
 uint32_t lba_limit;
+uint8_t partition_type;
+
+
+uint16_t bytes_per_sector;
+uint8_t sectors_per_cluster;
+uint16_t reserved_sectors;
+uint8_t number_of_FATs;
+uint16_t root_entries;
+uint16_t total_sectors;
+
+uint16_t sectors_per_FAT;
+uint32_t root_directory_sectors;
+uint32_t first_data_sector;
+uint32_t total_clusters;
+uint32_t fat_start_sector;
+uint32_t root_dir_start_sector;
+
 
 void Read_MBR()
 {
@@ -15,23 +32,30 @@ void Read_MBR()
 
     ata0m.Read28(0, 512, (uint8_t*)&mbr); // Load MBR into mbr struct, this will actually load correctly the data
 
-    if (mbr.signature != 0xaa55) 
+    for (int i = 0; i < 512; i++)
     {
-        printf((uint8_t*)"error",0);
+        printfHex(((uint8_t*)&mbr)[i]);
+        printf((uint8_t*)" ",0);
+    }
+    
+    
+    if (mbr.signature == 0xaa55) 
+    {
+        printf((uint8_t*)"no error",0);
 
     }
     else 
     {
-        printf((uint8_t*)"no error",0);
+        printf((uint8_t*)"error",0);
     }
     
     MBR_PartitionEntry* firstPartition = &(mbr.partitionTable[0]); // pointer to the first partition table entry
 
-    uint32_t lba_start = firstPartition->relativeSector; // Actual beggining of our partition
+    lba_start = firstPartition->relativeSector; // Actual beggining of our partition
 
-    uint32_t lba_limit = firstPartition->totalSectors; // Size of partition
+    lba_limit = firstPartition->totalSectors; // Size of partition
 
-    uint8_t partition_type = firstPartition->partitionType;
+    partition_type = firstPartition->partitionType;
 
     printfHex(partition_type);
     printf((uint8_t*)"\n",0);
@@ -49,24 +73,24 @@ void readBootSector()
     
     ata0m.Read28(lba_start, sizeof(boot_sector), (uint8_t*)&boot_sector);
 
-    uint16_t bytes_per_sector = boot_sector.BPB_BytsPerSec;
-    uint8_t sectors_per_cluster = boot_sector.BPB_SecPerClus;
-    uint16_t reserved_sectors = boot_sector.BPB_RsvdSecCnt;
-    uint8_t number_of_FATs = boot_sector.BPB_NumFATs;
-    uint16_t root_entries = boot_sector.BPB_RootEntCnt;
-    uint16_t total_sectors = boot_sector.BPB_TotSec16;
+    bytes_per_sector = boot_sector.BPB_BytsPerSec;
+    sectors_per_cluster = boot_sector.BPB_SecPerClus;
+    reserved_sectors = boot_sector.BPB_RsvdSecCnt;
+    number_of_FATs = boot_sector.BPB_NumFATs;
+    root_entries = boot_sector.BPB_RootEntCnt;
+    total_sectors = boot_sector.BPB_TotSec16;
     if (total_sectors == 0) 
     {
         total_sectors = boot_sector.BPB_TotSec32;
     }
-    uint16_t sectors_per_FAT = boot_sector.BPB_FATSz16;
-    uint32_t root_directory_sectors = ((root_entries * 32) + (bytes_per_sector - 1)) / bytes_per_sector;
-    uint32_t first_data_sector = reserved_sectors + (number_of_FATs * sectors_per_FAT) + root_directory_sectors;
-    uint32_t total_clusters = (total_sectors - first_data_sector) / sectors_per_cluster;
+    sectors_per_FAT = boot_sector.BPB_FATSz16;
+    root_directory_sectors = ((root_entries * 32) + (bytes_per_sector - 1)) / bytes_per_sector;
+    first_data_sector = reserved_sectors + (number_of_FATs * sectors_per_FAT) + root_directory_sectors;
+    total_clusters = (total_sectors - first_data_sector) / sectors_per_cluster;
 
     // Calculate the starting sector of the FAT and root directory - this is the important thing
-    uint32_t fat_start_sector = lba_start + reserved_sectors;
-    uint32_t root_dir_start_sector = fat_start_sector + (number_of_FATs * sectors_per_FAT);
+    fat_start_sector = lba_start + reserved_sectors;
+    root_dir_start_sector = fat_start_sector + (number_of_FATs * sectors_per_FAT);
 
 
     printfHex(sectors_per_cluster);

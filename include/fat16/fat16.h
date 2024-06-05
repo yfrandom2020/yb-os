@@ -76,6 +76,15 @@ extern uint8_t number_of_FATs;
 extern uint16_t root_entries;
 extern uint16_t total_sectors;
 
+
+extern uint16_t sectors_per_FAT;
+extern uint32_t root_directory_sectors;
+extern uint32_t first_data_sector;
+extern uint32_t total_clusters;
+// Calculate the starting sector of the FAT and root directory
+extern uint32_t fat_start_sector;
+extern uint32_t root_dir_start_sector;
+
 extern uint16_t sectors_per_FAT;
 extern uint32_t root_directory_sectors;
 extern uint32_t first_data_sector;

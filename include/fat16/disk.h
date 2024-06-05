@@ -24,6 +24,9 @@ public:
     ~ata();
     
     void Identify();
+    // sector
+    // count - how much to read/write
+    // pointer to buffer to load or to write to
     void Read28(uint32_t sectorNum, int count = 512, uint8_t* ptr=nullptr);
     void Write28(uint32_t sectorNum, uint8_t* data, uint32_t count);
     void Flush();

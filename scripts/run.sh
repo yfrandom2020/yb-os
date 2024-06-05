@@ -20,5 +20,6 @@ if [ ! -e "dependancies/os-disk.raw" ]; then
 fi
 
 # Run qemu-system-i386 with mykernel.iso and os-disk.qcow2
+sudo hexdump -C dependancies/os-disk.raw
 /usr/bin/qemu-system-i386 -cdrom ./objects/mykernel.iso -drive file=dependancies/os-disk.raw,format=raw,cache=none -boot d -m 512 -no-reboot -no-shutdown -M smm=off -s
 

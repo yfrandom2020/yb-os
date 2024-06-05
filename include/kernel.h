@@ -24,7 +24,7 @@
 extern uint8_t up_time;
 typedef void (*command_func_t)(void); // Pointer to a void function that takes no arguments
 
-extern uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
+uint16_t* VideoMemory = (uint16_t*) VIDEO_MEMORY_ADDRESS;
 extern uint8_t x,y;
 
 extern char command_buffer[MAX_COMMAND_LENGTH]; // Printing related - a buffer to store the characters written

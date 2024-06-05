@@ -50,14 +50,6 @@ void ata::Identify()
     {
         return;
     }
-    
-    for(int i = 0; i < 256; i++)
-    {
-        uint16_t data = dataPort.Read();
-        char *text = "  \0";
-        text[0] = (data >> 8) & 0xFF;
-        text[1] = data & 0xFF;
-    }
 }
 
 void ata::Read28(uint32_t sectorNum, int count, uint8_t* ptr)
@@ -117,7 +109,7 @@ void ata::Write28(uint32_t sectorNum, uint8_t* data, uint32_t count)
     }
     
     // Write the data
-    for (int i = 0; i < count; i += 2)
+    for (uint32_t i = 0; i < count; i += 2)
     {
         uint16_t wdata = data[i];
         if (i + 1 < count)

@@ -68,7 +68,7 @@ void Keyboard(Registers* state)
         }
     } else 
     {
-        char buffer[2] = {data, '\0'};
+        char buffer[2] = {static_cast<char>(data), '\0'};
         printf((uint8_t*)buffer, 1); // Print character
     }
     

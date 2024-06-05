@@ -141,7 +141,33 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     //uint8_t ptr[512];
     //ata0m.Read28(2,512,ptr);
     //printf(ptr,0);
+
+    // uint8_t write_ptr[512];
+    // for (int i = 0; i < 512; i++)
+    // {
+    //     write_ptr[i] = 'v';
+    //     if (i==5) write_ptr[i] = 'p';
+    //     if (i==11) write_ptr[i] = 's';
+    //     if (i==17) write_ptr[i] = 'x';
+    // }
+
+    // ata0m.Write28(0, write_ptr, sizeof(write_ptr));
+    // ata0m.Flush();
+
+    // uint8_t read_ptr[513];
+    // read_ptr[512] = '\0';
+    // ata0m.Read28(0,512, read_ptr);
+    // printf(read_ptr,0);
     
+    ata0m.Write28(0, (uint8_t*)"http://www.AlgorithMan.de", 25);
+    //ata0m.Flush();
+    uint8_t read_ptr[26];
+    read_ptr[25] = '\0';
+    
+    ata0m.Read28(0, 25,read_ptr);
+    read_ptr[24] = 'a';
+    printf(read_ptr,0);
+
     for (int i = 0; i < 10; i++)
     {
         i--;

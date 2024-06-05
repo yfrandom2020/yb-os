@@ -23,12 +23,9 @@ void initializers()
 
     ata0m.Identify();
 
-    Read_MBR();
+    //Read_MBR();
 
-    readBootSector();
+    //readBootSector();
 
     Enable_interrupts();
-    //ata_initialize(); // Initialize disk
-
-    //Init_ext();
 }
