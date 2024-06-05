@@ -4,6 +4,7 @@
 #include <port/port.h>
 
 void printf(uint8_t* ltr, int flag);   
+void printfHex(uint8_t key);
 class ata
 {
 protected:

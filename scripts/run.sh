@@ -1,27 +1,24 @@
 #!/bin/bash
-DEPENDENCIES_DIR="./dependancies"
-DISK_FILE="os-disk.qcow2"
+DEPENDENCIES_DIR="./dependencies"
+DISK_FILE="os-disk.raw"
 DISK_PATH="$DEPENDENCIES_DIR/$DISK_FILE"
-# Check if os-disk.qcow2 exists in the dependancies folder
 
+# Change directory to dependencies folder
 
-TEST_DIR="./test"
-TEST_DISK_FILE="test.qcow2"
-TEST_DISK_PATH="$TEST_DIR/$TEST_DISK_FILE"
-
-if [ ! -e "$DISK_PATH" ]; then
+# Check if os-disk.raw exists in the dependencies folder
+if [ ! -e "dependancies/os-disk.raw" ]; then
     # If the file doesn't exist, create it
-    /usr/bin/qemu-img create -f qcow2 "$DISK_FILE" 512M
-    # Start GParted virtual machine to define ext2 partition
-    /usr/bin/qemu-system-i386 -cdrom "$DEPENDENCIES_DIR/gparted-live-1.6.0-3-i686.iso" -hda "$DISK_FILE" -boot d -m 512
-
-    # Move the created disk to the dependencies folder
-    sudo mv "$DISK_FILE" "$DEPENDENCIES_DIR"
-
-    # Copy os-disk.qcow2 to test.qcow2 and move it to /test folder
-    sudo cp "$DISK_PATH" "$TEST_DISK_FILE"
-    sudo mv "$TEST_DISK_FILE" "$TEST_DIR"
+    /usr/bin/qemu-img create -f raw os-disk.raw 512M
+    loop_device=$(sudo losetup -fP --show os-disk.raw)
+    sudo parted ${loop_device} --script mklabel msdos
+    sudo parted ${loop_device} --script mkpart primary fat16 1MiB 100%
+    sudo parted ${loop_device} --script set 1 boot on
+    sudo mkfs.vfat -F 16 ${loop_device}p1
+    sudo dd if=/dev/loop0 bs=512 count=1 | hexdump -C
+    sudo losetup -d ${loop_device}
+    sudo mv os-disk.raw dependancies/ 
 fi
 
 # Run qemu-system-i386 with mykernel.iso and os-disk.qcow2
-/usr/bin/qemu-system-i386 -cdrom ./objects/mykernel.iso -drive file="$DISK_PATH",cache=none -boot d -m 512 -no-reboot -no-shutdown -d int -M smm=off -s
+/usr/bin/qemu-system-i386 -cdrom ./objects/mykernel.iso -drive file=dependancies/os-disk.raw,format=raw,cache=none -boot d -m 512 -no-reboot -no-shutdown -M smm=off -s
+

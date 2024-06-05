@@ -1,1 +1,2 @@
 dependancies/gparted-live-1.6.0-3-i686.iso filter=lfs diff=lfs merge=lfs -text
+dependancies/os-disk.raw filter=lfs diff=lfs merge=lfs -text

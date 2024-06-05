@@ -17,13 +17,17 @@ void initializers()
 
     ISR_Initialize();
 
-    Populate_Irq_Entries(); // Filling in the ISRHandlers array
+    Populate_Irq_Entries(); // Filling in the ISRHandlers array, only physical connections: keyboard and timer
 
-    Init_pic(); // Init_pic also masks all interrups
-
-    Enable_interrupts();
+    Init_pic(); 
 
     ata0m.Identify();
+
+    Read_MBR();
+
+    readBootSector();
+
+    Enable_interrupts();
     //ata_initialize(); // Initialize disk
 
     //Init_ext();

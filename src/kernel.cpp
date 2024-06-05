@@ -138,6 +138,9 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // This simply calls initalizers and then enters a never ending loop
     
     initializers();
+    //uint8_t ptr[512];
+    //ata0m.Read28(2,512,ptr);
+    //printf(ptr,0);
     
     for (int i = 0; i < 10; i++)
     {

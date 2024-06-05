@@ -2,7 +2,6 @@
 #include <types.h>
 #include <fat16/disk.h>
 #include <stddef.h>
-#include <util/util.h>
 extern ata ata0m;
 typedef struct 
 {
@@ -34,20 +33,21 @@ typedef struct
 
 typedef struct 
 {
-    // The first sector of each partition is called the boot sector and contains some metadata about the partition and file system
+    // The first sector of each partition is called the boot sector and contains some metadata about the partition and the file system
     uint8_t  BS_jmpBoot[3];
     uint8_t  BS_OEMName[8];
     uint16_t BPB_BytsPerSec; // 512
-    uint8_t  BPB_SecPerClus; // 8 
+    uint8_t  BPB_SecPerClus; // 16 0x10
     uint16_t BPB_RsvdSecCnt;
     uint8_t  BPB_NumFATs; // usually 2
-    uint16_t BPB_RootEntCnt; // garbage value, must be set
+    uint16_t BPB_RootEntCnt; // garbage values, must be set
     uint16_t BPB_TotSec16; 
     uint8_t  BPB_Media;
     uint16_t BPB_FATSz16;
     uint16_t BPB_SecPerTrk;
     uint16_t BPB_NumHeads;
     uint32_t BPB_HiddSec;
+    
     uint32_t BPB_TotSec32;
     uint8_t  BS_DrvNum;
     uint8_t  BS_Reserved1;
@@ -59,10 +59,27 @@ typedef struct
 
 
 
-void Read_MBR(MBR* mbr_sector);
+void Read_MBR();
 void readBootSector(); // Use ata_read_sector  
 FAT16_BootSector parseBootSector(uint8_t* bootSectorBuffer); // Receive the data from previous function and parse
 
+// MBR information about our FAT16 partition
 extern uint32_t lba_start;
 extern uint32_t lba_limit;
 extern uint8_t partition_type;
+
+// Boot sector information about FAT16
+extern uint16_t bytes_per_sector;
+extern uint8_t sectors_per_cluster;
+extern uint16_t reserved_sectors;
+extern uint8_t number_of_FATs;
+extern uint16_t root_entries;
+extern uint16_t total_sectors;
+
+extern uint16_t sectors_per_FAT;
+extern uint32_t root_directory_sectors;
+extern uint32_t first_data_sector;
+extern uint32_t total_clusters;
+// Calculate the starting sector of the FAT and root directory
+extern uint32_t fat_start_sector;
+extern uint32_t root_dir_start_sector;

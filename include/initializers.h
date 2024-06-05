@@ -12,3 +12,4 @@ extern "C" void Enable_interrupts();
 void ata_initialize();
 void Init_ext();
 extern ata ata0m;
+
