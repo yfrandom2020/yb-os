@@ -60,7 +60,7 @@ void Read_MBR()
     printfHex(partition_type);
     printf((uint8_t*)"\n",0);
 
-    // Purpose of function: to set up values in the lba global variables  
+    // Purpose of function: to set up values in the lba global variables, to reach boot sector  
 }
 
 
@@ -71,7 +71,7 @@ void readBootSector()
     // First we read the entire sector into the bootsector structure
     // Then parse it anf gain the useful data
     
-    ata0m.Read28(lba_start, sizeof(boot_sector), (uint8_t*)&boot_sector);
+    ata0m.Read28(lba_start, sizeof(boot_sector), (uint8_t*)&boot_sector); // Load boot sector
 
     bytes_per_sector = boot_sector.BPB_BytsPerSec;
     sectors_per_cluster = boot_sector.BPB_SecPerClus;
@@ -102,6 +102,10 @@ void readBootSector()
 
     printfHex(boot_sector.BPB_SecPerClus);
 
+    // Purpose of function: to set up global values relating to boot sector
+
     
 }
+
+
 
