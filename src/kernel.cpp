@@ -159,14 +159,14 @@ extern "C" void kernelMain(void* multiboot_structure, uint32_t magicnumber)
     // ata0m.Read28(0,512, read_ptr);
     // printf(read_ptr,0);
     
-    ata0m.Write28(0, (uint8_t*)"http://www.AlgorithMan.de", 25);
-    //ata0m.Flush();
-    uint8_t read_ptr[26];
-    read_ptr[25] = '\0';
+    // ata0m.Write28(0, (uint8_t*)"http://www.AlgorithMan.de", 25);
+    // ata0m.Flush();
+    // uint8_t read_ptr[26];
+    // read_ptr[25] = '\0';
     
-    ata0m.Read28(0, 25,read_ptr);
-    read_ptr[24] = 'a';
-    printf(read_ptr,0);
+    // ata0m.Read28(0, 25,read_ptr);
+    // read_ptr[24] = 'a';
+    // printf(read_ptr,0);
 
     for (int i = 0; i < 10; i++)
     {

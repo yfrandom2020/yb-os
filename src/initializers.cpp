@@ -23,9 +23,9 @@ void initializers()
 
     ata0m.Identify();
 
-    //Read_MBR();
+    Read_MBR();
 
-    //readBootSector();
+    readBootSector();
 
     Enable_interrupts();
 }

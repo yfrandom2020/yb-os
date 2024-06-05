@@ -50,6 +50,14 @@ void ata::Identify()
     {
         return;
     }
+
+    for (uint16_t i = 0; i < 256; i++)
+    {
+        uint16_t data = dataPort.Read();
+        char* foo = "  \0";
+        foo[1] = (data >> 8) & 0x00FF;
+        foo[0] = data & 0x00FF;
+    }
 }
 
 void ata::Read28(uint32_t sectorNum, int count, uint8_t* ptr)
